@@ -2,11 +2,12 @@
     namespace App\Http\Traits;
     use Illuminate\Support\Facades\Validator;
 
-    trait KecamatanTrait{
+    trait KelurahanTrait{
         public function CreateKelurahanValidator(Array $data){
             $validator = Validator::make($data,[
-                'kelurahanName'=>'required',
-                'kecamatanId'=>'required'
+                'kelurahanName'=>'required|string',
+                'kecamatanId'=>'required',
+                'kodePos'=>'required|string'
             ]);
             return $validator;
         }

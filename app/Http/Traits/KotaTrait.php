@@ -5,7 +5,7 @@
     trait KotaTrait{
         public function CreateKotaValidator(Array $data){
             $validator = Validator::make($data,[
-                'kotaName'=>'required',
+                'kota'=>'required',
                 'provinsiId'=>'required'
             ]);
             return $validator;

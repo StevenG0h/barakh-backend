@@ -29,10 +29,10 @@ class KotaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, KotaService $service)
     {
-        dd($request);
-        return response($request,201);
+        $kota = $service->createKota($request->all());
+        return response($kota,201);
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelurahan;
+use App\Services\KelurahanService;
 use Illuminate\Http\Request;
 
 class KelurahanController extends Controller
@@ -12,7 +14,8 @@ class KelurahanController extends Controller
      */
     public function index()
     {
-        //
+        $kelurahans = Kelurahan::all();
+        return response($kelurahans,200);
     }
 
     /**
@@ -26,9 +29,10 @@ class KelurahanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, KelurahanService $service)
     {
-        //
+        $kelurahan = $service->createKelurahan($request->all());
+        return response($kelurahan,202);
     }
 
     /**
