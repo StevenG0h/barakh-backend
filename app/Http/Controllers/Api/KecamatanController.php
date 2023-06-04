@@ -37,7 +37,8 @@ class KecamatanController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $kecamatan = kecamatan::where('id',$id)->first();
+        return response($kecamatan,200);
     }
 
     /**
@@ -51,16 +52,20 @@ class KecamatanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, kecamatanService $service)
     {
-        //
+        $kecamatan = $service->updatekecamatan($id,$request->all());
+        return $kecamatan;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, kecamatanService $service)
     {
-        //
+        $service = $service->deletekecamatan($id);
+        return response([
+            'msg'=>'success'
+        ],200);
     }
 }

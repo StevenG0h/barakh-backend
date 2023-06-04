@@ -40,7 +40,8 @@ class KelurahanController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $kelurahan = Kelurahan::where('id',$id)->first();
+        return response($kelurahan,200);
     }
 
     /**
@@ -54,16 +55,20 @@ class KelurahanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, KelurahanService $service)
     {
-        //
+        $kelurahan = $service->updateKelurahan($id,$request->all());
+        return $kelurahan;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, KelurahanService $service)
     {
-        //
+        $service = $service->deleteKelurahan($id);
+        return response([
+            'msg'=>'success'
+        ],200);
     }
 }

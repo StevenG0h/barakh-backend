@@ -11,4 +11,13 @@
             ]);
             return $validator;
         }
+        
+        public function UpdateKelurahanValidator(Array $data){
+            $validator = Validator::make($data,[
+                'kelurahanName'=>'sometimes|string',
+                'kecamatanId'=>'sometimes',
+                'kodePos'=>'sometimes|string'
+            ]);
+            return $validator;
+        }
     }

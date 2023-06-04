@@ -9,4 +9,11 @@
             ]);
             return $validator;
         }
+        
+        public function UpdateProvinsiValidator(Array $data){
+            $validator = Validator::make($data,[
+                'provinsiName'=>'sometimes|string',
+            ]);
+            return $validator;
+        }
     }

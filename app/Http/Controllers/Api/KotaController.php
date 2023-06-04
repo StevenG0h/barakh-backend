@@ -40,7 +40,8 @@ class KotaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $kota = Kota::where('id',$id)->first();
+        return response($kota,200);
     }
 
     /**
@@ -54,16 +55,20 @@ class KotaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, KotaService $service)
     {
-        //
+        $kota = $service->updateKota($id,$request->all());
+        return $kota;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, KotaService $service)
     {
-        //
+        $service = $service->deleteKota($id);
+        return response([
+            'msg'=>'success'
+        ],200);
     }
 }

@@ -13,5 +13,18 @@ use App\Models\kecamatan;
             
             return $kecamatan;
         }
+
+        public function updateKecamatan($id,Array $data): kecamatan{
+            $validation =  $this->UpdateKecamatanValidator($data)->validate();
+            $kecamatan = kecamatan::findOrFail($id);
+            $kecamatan->update($validation);
+            return $kecamatan;
+        }
+
+        public function deleteKecamatan($id): kecamatan{
+            $kecamatan = kecamatan::findOrFail($id);
+            $kecamatan->delete();
+            return $kecamatan;
+        }
     }
 ?>

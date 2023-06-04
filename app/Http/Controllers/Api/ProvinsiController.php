@@ -42,7 +42,8 @@ class ProvinsiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $provinsi = Provinsi::where('id',$id)->first();
+        return response($provinsi,200);
     }
 
     /**
@@ -56,16 +57,20 @@ class ProvinsiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, ProvinsiService $service)
     {
-        //
+        $provinsi = $service->updateProvinsi($id,$request->all());
+        return $provinsi;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, ProvinsiService $service)
     {
-        //
+        $service = $service->deleteProvinsi($id);
+        return response([
+            'msg'=>'success'
+        ],200);
     }
 }

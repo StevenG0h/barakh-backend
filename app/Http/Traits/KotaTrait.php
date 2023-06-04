@@ -10,4 +10,12 @@
             ]);
             return $validator;
         }
+
+        public function UpdateKotaValidator(Array $data){
+            $validator = Validator::make($data,[
+                'kota'=>'sometimes|string',
+                'provinsiId'=>'sometimes',
+            ]);
+            return $validator;
+        }
     }

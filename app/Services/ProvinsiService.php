@@ -13,5 +13,18 @@ use App\Models\Provinsi;
             
             return $provinsi;
         }
+
+        public function updateProvinsi($id,Array $data): Provinsi{
+            $validation =  $this->UpdateProvinsiValidator($data)->validate();
+            $provinsi = Provinsi::findOrFail($id);
+            $provinsi->update($validation);
+            return $provinsi;
+        }
+
+        public function deleteProvinsi($id): Provinsi{
+            $provinsi = Provinsi::findOrFail($id);
+            $provinsi->delete();
+            return $provinsi;
+        }
     }
 ?>

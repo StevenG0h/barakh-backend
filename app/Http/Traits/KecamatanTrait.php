@@ -11,4 +11,12 @@ use Illuminate\Support\Facades\Validator;
             ]);
             return $validator;
         }
+
+        public function UpdateKecamatanValidator(Array $data){
+            $validator = Validator::make($data,[
+                'kecamatanName'=>'sometimes|string',
+                'kotaId'=>'sometimes',
+            ]);
+            return $validator;
+        }
     }

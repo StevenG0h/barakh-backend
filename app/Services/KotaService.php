@@ -13,5 +13,18 @@ use App\Models\Kota;
             
             return $kota;
         }
+
+        public function updateKota($id,Array $data): Kota{
+            $validation =  $this->UpdateKotaValidator($data)->validate();
+            $kota = Kota::findOrFail($id);
+            $kota->update($validation);
+            return $kota;
+        }
+
+        public function deleteKota($id): Kota{
+            $kota = Kota::findOrFail($id);
+            $kota->delete();
+            return $kota;
+        }
     }
 ?>
