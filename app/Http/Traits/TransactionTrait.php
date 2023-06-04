@@ -1,10 +1,10 @@
 <?php 
     namespace App\Http\Traits;
-    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Validator;
 
-    trait TestimonyTrait{
-        public function CreateTestimonyValidator(Request $data){
-            $validator = $data->validate([
+    trait TransactionTrait{
+        public function CreateTransactionValidator(Array $data){
+            $validator = Validator::make($data,[
                 'transactionProvince'=>'required',
                 'transactionCity'=>'required',
                 'transactionDistrict'=>'required',
@@ -12,6 +12,19 @@
                 'productId'=>'required',
                 'adminId'=>'required',
                 'transactionStatus'=>'required'
+            ]);
+            return $validator;
+        }
+        
+        public function UpdateTransactionValidator(Array $data){
+            $validator = Validator::make($data,[
+                'transactionProvince'=>'sometimes',
+                'transactionCity'=>'sometimes',
+                'transactionDistrict'=>'sometimes',
+                'transactionAddress'=>'sometimes',
+                'productId'=>'sometimes',
+                'adminId'=>'sometimes',
+                'transactionStatus'=>'sometimes'
             ]);
             return $validator;
         }

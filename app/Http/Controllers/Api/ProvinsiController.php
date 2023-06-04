@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class ProvinsiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $provinsi = Provinsi::all();
@@ -21,51 +19,23 @@ class ProvinsiController extends Controller
         ],200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, ProvinsiService $service){
         $provinsi = $service->createProvinsi($request->all());
         return response($provinsi, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $provinsi = Provinsi::where('id',$id)->first();
         return response($provinsi,200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id, ProvinsiService $service)
     {
         $provinsi = $service->updateProvinsi($id,$request->all());
         return $provinsi;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id, ProvinsiService $service)
     {
         $service = $service->deleteProvinsi($id);

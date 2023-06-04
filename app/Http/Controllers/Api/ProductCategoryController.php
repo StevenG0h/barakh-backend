@@ -3,63 +3,42 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProductCategory;
+use App\Services\ProductCategoryService;
 use Illuminate\Http\Request;
 
 class ProductCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $provinsi = ProductCategory::all();
+        return response([
+            "data"=>$provinsi
+        ],200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function store(Request $request, ProductCategoryService $service){
+        $provinsi = $service->createProductCategory($request->all());
+        return response($provinsi, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        $provinsi = ProductCategory::where('id',$id)->first();
+        return response($provinsi,200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, string $id, ProductCategoryService $service)
     {
-        //
+        $provinsi = $service->updateProductCategory($id,$request->all());
+        return $provinsi;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(string $id, ProductCategoryService $service)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $service = $service->deleteProductCategory($id);
+        return response([
+            'msg'=>'success'
+        ],200);
     }
 }
