@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transactions',function(Blueprint $table){
-            $table->foreign('productId')->references('id')->on('products');
-            $table->foreign('clientId')->references('id')->on('clients');
-            $table->foreign('adminId')->references('id')->on('admins');
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->enum('transactionType',['PENGELUARAN','PEMASUKAN']);
+            $table->timestamps();
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('transactions');
     }
 };

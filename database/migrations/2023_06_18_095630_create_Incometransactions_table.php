@@ -11,17 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('incomeTransactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('transactionProvince');
-            $table->unsignedBigInteger('transactionCity');
             $table->unsignedBigInteger('transactionDistrict');
-            $table->string('transactionAddress');
             $table->unsignedBigInteger('productId');
             $table->unsignedBigInteger('clientId');
             $table->unsignedBigInteger('adminId');
+            $table->unsignedBigInteger('transactionId');
+            $table->string('transactionAddress');
+            $table->integer('transactionAmount');
             $table->string('transactionStatus');
-            $table->timestamps();
+
+            $table->foreign('transactionDistrict')->references('id')->on('kelurahans');
+            $table->foreign('productId')->references('id')->on('products');
+            $table->foreign('clientId')->references('id')->on('clients');
+            $table->foreign('adminId')->references('id')->on('admins');
+            $table->foreign('transactionId')->references('id')->on('transactions');
         });
     }
 
