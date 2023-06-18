@@ -26,21 +26,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function (){
+    Route::resource('admin', AdminController::class);
+    Route::resource('client', ClientController::class);
+    Route::resource('kecamatan', KecamatanController::class);
+    Route::resource('kelurahan', KelurahanController::class);
+    Route::resource('kota', KotaController::class);
+    Route::resource('product', ProductController::class);
+    Route::resource('provinsi', ProvinsiController::class);
+    Route::resource('testimony', TestimonyController::class);
+    Route::resource('transaction', TransactionController::class);
+    Route::resource('unit-usaha', UnitUsahaController::class);
 });
 
 Route::post("/login",[AuthController::class,"login"]);
 Route::post("/register",[AuthController::class,"register"]);
 
-Route::resource('admin', AdminController::class);
-Route::resource('client', ClientController::class);
-Route::resource('kecamatan', KecamatanController::class);
-Route::resource('kelurahan', KelurahanController::class);
-Route::resource('kota', KotaController::class);
-Route::resource('product', ProductController::class);
-Route::resource('product-category', ProductCategoryController::class);
-Route::resource('provinsi', ProvinsiController::class);
-Route::resource('testimony', TestimonyController::class);
-Route::resource('transaction', TransactionController::class);
-Route::resource('unit-usaha', UnitUsahaController::class);

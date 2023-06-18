@@ -21,7 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('usahaId');
             $table->timestamps();
 
-            $table->foreign('categoryId')->references('id')->on('product_categories');
             $table->foreign('usahaId')->references('id')->on('unit_usahas');
         });
     }

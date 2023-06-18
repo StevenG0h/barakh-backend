@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_categories', function(Blueprint $table){
-            $table->foreign('usahaId')->references('id')->on('unit_usahas');
+        Schema::create('content_imgs', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('contentId');
+            $table->text('path');
+            $table->timestamps();
+
+            $table->foreign('contentId')->references('id')->on('contents');
         });
     }
 
@@ -21,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('content_imgs');
     }
 };
