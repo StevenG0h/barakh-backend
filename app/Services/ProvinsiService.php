@@ -7,7 +7,7 @@ use App\Models\Provinsi;
     class ProvinsiService{
         use ProvinsiTrait;
 
-        public function createProvinsi(Array $data): provinsi{
+        public function createProvinsi(Array $data): Provinsi{
             $validation =  $this->createProvinsiValidator($data)->validate();
             $provinsi = Provinsi::create($validation);
             

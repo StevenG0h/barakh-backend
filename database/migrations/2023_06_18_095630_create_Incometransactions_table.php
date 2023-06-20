@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('incomeTransactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('transactionDistrict');
+            $table->unsignedBigInteger('kelurahanId');
             $table->unsignedBigInteger('productId');
             $table->unsignedBigInteger('clientId');
             $table->unsignedBigInteger('adminId');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('transactionAmount');
             $table->string('transactionStatus');
 
-            $table->foreign('transactionDistrict')->references('id')->on('kelurahans');
+            $table->foreign('kelurahanId')->references('id')->on('kelurahans');
             $table->foreign('productId')->references('id')->on('products');
             $table->foreign('clientId')->references('id')->on('clients');
             $table->foreign('adminId')->references('id')->on('admins');

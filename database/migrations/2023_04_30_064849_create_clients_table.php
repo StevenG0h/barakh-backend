@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('clientName');
-            $table->unsignedBigInteger('clientProvinsi');
-            $table->unsignedBigInteger('clientKota');
-            $table->unsignedBigInteger('clientKecamatan');
-            $table->unsignedBigInteger('clientKelurahan');
+            $table->string('clientNum');
+            $table->string('clientEmail');
             $table->unsignedBigInteger('clientAddress');
+            $table->unsignedBigInteger('clientKelurahan');
             $table->timestamps();
         });
     }

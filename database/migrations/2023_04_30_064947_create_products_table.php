@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('productName');
             $table->string('productDesc');
-            $table->string('productImage');
             $table->string('productPrice');
             $table->unsignedBigInteger('categoryId');
             $table->unsignedBigInteger('usahaId');

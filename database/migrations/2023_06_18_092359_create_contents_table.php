@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('usahaId');
+            $table->text('title');
             $table->text('content');
             $table->timestamps();
 
