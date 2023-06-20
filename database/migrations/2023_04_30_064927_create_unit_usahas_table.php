@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('unit_usahas', function (Blueprint $table) {
             $table->id();
             $table->string('usahaName');
+            $table->string('usahaImage');
             $table->string('usahaDesc');
             $table->timestamps();
         });
