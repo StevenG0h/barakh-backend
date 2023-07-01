@@ -19,7 +19,7 @@ class ProductController extends Controller
 
     public function store(Request $request, ProductService $service){
         $provinsi = $service->createProduct($request->all());
-        return response($provinsi, 201);
+        return response($request, 201);
     }
 
     public function show(string $id)

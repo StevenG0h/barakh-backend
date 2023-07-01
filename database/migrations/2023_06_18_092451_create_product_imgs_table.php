@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('product_imgs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('productId');
+            $table->unsignedBigInteger('product_id');
             $table->text('path');
+            $table->integer('order');
             $table->timestamps();
 
-            $table->foreign('productId')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

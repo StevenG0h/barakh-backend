@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('productName');
             $table->string('productDesc');
             $table->string('productPrice');
-            $table->unsignedBigInteger('categoryId');
-            $table->unsignedBigInteger('usahaId');
+            $table->integer('productStock');
+            $table->unsignedBigInteger('unit_usaha_id');
             $table->timestamps();
 
-            $table->foreign('usahaId')->references('id')->on('unit_usahas');
+            $table->foreign('unit_usaha_id')->references('id')->on('unit_usahas');
         });
     }
 

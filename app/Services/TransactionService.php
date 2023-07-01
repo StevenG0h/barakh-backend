@@ -8,7 +8,10 @@ use App\Models\Transaction;
         use TransactionTrait;
 
         public function createTransaction(Array $data): Transaction{
-            $validation =  $this->createTransactionValidator($data)->validate();
+            $type = $data['transactionType'];
+            if($type == "PEMASUKAN"){
+                $validation =  $this->createTransactionValidator($data)->validate();
+            }
             $transaction = Transaction::create($validation);
             return $transaction;
         }

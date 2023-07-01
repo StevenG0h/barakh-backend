@@ -1,16 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\AdminController;
-use App\Http\Controllers\api\AuthController;
-use App\Http\Controllers\Api\ClientController;
-use App\Http\Controllers\Api\KecamatanController;
-use App\Http\Controllers\Api\KelurahanController;
-use App\Http\Controllers\Api\KotaController;
-use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\ProvinsiController;
-use App\Http\Controllers\Api\TestimonyController;
-use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UnitUsahaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,24 +11,27 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
 |
 */
 
-Route::middleware('auth:sanctum')->group(function (){
-    Route::resource('admin', AdminController::class);
-    Route::resource('client', ClientController::class);
-    Route::resource('kecamatan', KecamatanController::class);
-    Route::resource('kelurahan', KelurahanController::class);
-    Route::resource('kota', KotaController::class);
-    Route::resource('product', ProductController::class);
-    Route::resource('provinsi', ProvinsiController::class);
-    Route::resource('testimony', TestimonyController::class);
-    Route::resource('transaction', TransactionController::class);
-    Route::resource('unit-usaha', UnitUsahaController::class);
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();
 });
 
-Route::post("/login",[AuthController::class,"login"]);
-Route::post("/register",[AuthController::class,"register"]);
+Route::prefix('unit-usaha')->group(function(){
+    Route::post('/{id}',[UnitUsahaController::class, 'update']);
+    Route::post('/',[UnitUsahaController::class, 'store']);
+    Route::get('/',[UnitUsahaController::class, 'index']);
+    Route::delete('/{id}',[UnitUsahaController::class, 'destroy']);
+    Route::get('/{id}',[UnitUsahaController::class, 'show']);
+});
 
+Route::prefix('produk')->group(function(){
+    Route::post('/{id}',[ProductController::class, 'update']);
+    Route::post('/',[ProductController::class, 'store']);
+    Route::get('/',[ProductController::class, 'index']);
+    Route::delete('/{id}',[ProductController::class, 'destroy']);
+    Route::get('/{id}',[ProductController::class, 'show']);
+});

@@ -7,10 +7,10 @@
             $validator = Validator::make($data,[
                 'productName'=>'required',
                 'productDesc'=>'required',
-                'productImage'=>'required',
+                'productImages.*'=>'required|image',
                 'productPrice'=>'required',
-                'categoryId'=>'required',
-                'usahaId'=>'required'
+                'productStock'=>'required',
+                'unit_usaha_id'=>'required'
             ]);
             return $validator;
         }
@@ -19,10 +19,11 @@
             $validator = Validator::make($data,[
                 'productName'=>'sometimes',
                 'productDesc'=>'sometimes',
-                'productImage'=>'sometimes',
+                'productImages.*'=>'sometimes',
                 'productPrice'=>'sometimes',
-                'categoryId'=>'sometimes',
-                'usahaId'=>'sometimes'
+                'productStock'=>'sometimes',
+                'unit_usaha_id'=>'sometimes',
+                'deletedImage'=>'sometimes'
             ]);
             return $validator;
         }
