@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('adminId');
+            $table->unsignedBigInteger('user_id');
             $table->string('adminName');
             $table->string('adminNum');
             $table->string('adminLevel');

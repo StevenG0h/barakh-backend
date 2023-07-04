@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('clientName');
             $table->string('clientNum');
             $table->string('clientEmail');
-            $table->unsignedBigInteger('clientAddress');
+            $table->string('clientAddress');
             $table->unsignedBigInteger('clientKelurahan');
             $table->timestamps();
         });

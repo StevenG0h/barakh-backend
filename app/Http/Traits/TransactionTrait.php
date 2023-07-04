@@ -5,13 +5,27 @@
     trait TransactionTrait{
         public function CreateTransactionValidator(Array $data){
             $validator = Validator::make($data,[
-                'transactionProvince'=>'required',
-                'transactionCity'=>'required',
-                'transactionDistrict'=>'required',
+                'transactionType'=>'required',
+                'kelurahan_id'=>'required',
                 'transactionAddress'=>'required',
-                'productId'=>'required',
-                'adminId'=>'required',
+                'product_id'=>'required',
+                'productPrice'=>'required',
+                'productCount'=>'required',
+                'client_id'=>'required',
+                'admin_id'=>'required',
                 'transactionStatus'=>'required'
+            ]);
+            return $validator;
+        }
+       
+        public function CreateOtherTransactionValidator(Array $data){
+            $validator = Validator::make($data,[
+                'transactionType'=>'required',
+                'usaha_id'=>'required',
+                'admin_id'=>'required',
+                'transactionAmount'=>'required',
+                'transactionNote'=>'required',
+                'transactionTitle'=>'required'
             ]);
             return $validator;
         }

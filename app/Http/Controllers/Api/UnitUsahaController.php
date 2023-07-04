@@ -16,6 +16,14 @@ class UnitUsahaController extends Controller
             "data"=>$provinsi
         ],200);
     }
+    
+    public function getOptions()
+    {
+        $provinsi = UnitUsaha::get();
+        return response([
+            "data"=>$provinsi
+        ],200);
+    }
 
     public function store(Request $request, UnitUsahaService $service){
         $provinsi = $service->createUnitUsaha($request->all(), $request->usahaImage);

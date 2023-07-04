@@ -64,6 +64,11 @@ use Illuminate\Support\Facades\Storage;
 
         public function deleteProduct($id): Product{
             $product = Product::findOrFail($id);
+            $productImage = ProductImg::where('product_id',$id)->get();
+            for($i = 0; $i<count($productImage);$i++){
+                Storage::delete('public/product/'.$productImage[$i]->path);
+                $productImage[$i]->delete();
+            }
             $product->delete();
             return $product;
         }

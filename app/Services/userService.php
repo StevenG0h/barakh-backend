@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Hash;
             $admin->adminName = $validation['adminName'];
             $admin->adminNum = $validation['adminNum'];
             $admin->adminLevel = '1';
-            $admin->adminId = $user->id;
+            $admin->user_id = $user->id;
             $admin->save();
             
             return $user;

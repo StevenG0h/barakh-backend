@@ -11,22 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('incomeTransactions', function (Blueprint $table) {
+        Schema::create('income_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kelurahanId');
-            $table->unsignedBigInteger('productId');
-            $table->unsignedBigInteger('clientId');
-            $table->unsignedBigInteger('adminId');
-            $table->unsignedBigInteger('transactionId');
-            $table->string('transactionAddress');
+            $table->unsignedBigInteger('usaha_id');
+            $table->unsignedBigInteger('admin_id');
+            $table->unsignedBigInteger('transaction_id');
             $table->integer('transactionAmount');
-            $table->string('transactionStatus');
+            $table->string('transactionTitle');
+            $table->string('transactionNote');
+            $table->timestamps();
 
-            $table->foreign('kelurahanId')->references('id')->on('kelurahans');
-            $table->foreign('productId')->references('id')->on('products');
-            $table->foreign('clientId')->references('id')->on('clients');
-            $table->foreign('adminId')->references('id')->on('admins');
-            $table->foreign('transactionId')->references('id')->on('transactions');
+            $table->foreign('usaha_id')->references('id')->on('unit_usahas');
+            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('transaction_id')->references('id')->on('transactions');
         });
     }
 

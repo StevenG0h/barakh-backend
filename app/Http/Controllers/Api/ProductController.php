@@ -11,7 +11,16 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $provinsi = Product::all();
+        $provinsi = Product::with(['productImages','unitUsaha'])->get();
+        return response([
+            "data"=>$provinsi
+        ],200);
+    }
+    
+    public function getCart(Request $request)
+    {
+        $data = $request->all();
+        $provinsi = Product::with(['productImages','unitUsaha'])->whereIn('id',$data['data'])->get();
         return response([
             "data"=>$provinsi
         ],200);
@@ -24,7 +33,13 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $provinsi = Product::where('id',$id)->first();
+        $provinsi = Product::where('id',$id)->with(['unitUsaha'])->first();
+        return response($provinsi,200);
+    }
+    
+    public function showWithFilter(string $id)
+    {
+        $provinsi = Product::where('unit_usaha_id',$id)->get();
         return response($provinsi,200);
     }
 

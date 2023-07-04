@@ -13,4 +13,8 @@ class Product extends Model
     public function productImages(){
         return $this->hasMany(ProductImg::class);
     }
+    
+    public function unitUsaha(){
+        return $this->belongsTo(UnitUsaha::class);
+    }
 }

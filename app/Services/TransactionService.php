@@ -2,6 +2,8 @@
     namespace App\Services;
 
 use App\Http\Traits\TransactionTrait;
+use App\Models\IncomeTransaction;
+use App\Models\salesTransaction;
 use App\Models\Transaction;
 
     class TransactionService{
@@ -9,10 +11,19 @@ use App\Models\Transaction;
 
         public function createTransaction(Array $data): Transaction{
             $type = $data['transactionType'];
-            if($type == "PEMASUKAN"){
+            if($type == "PENJUALAN"){
                 $validation =  $this->createTransactionValidator($data)->validate();
+                $transaction = Transaction::create($validation);
+                $salesData = $validation;
+                $salesData['transaction_id'] = $transaction->id;
+                $sales = salesTransaction::create($salesData);
+            }else if($type == "PEMASUKANLAIN"){
+                $validation =  $this->CreateOtherTransactionValidator($data)->validate();
+                $transaction = Transaction::create($validation);
+                $incomeData = $validation;
+                $incomeData['transaction_id'] = $transaction->id;
+                $income = IncomeTransaction::create($incomeData);
             }
-            $transaction = Transaction::create($validation);
             return $transaction;
         }
 

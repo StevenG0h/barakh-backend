@@ -43,4 +43,8 @@ class AuthController extends Controller
         ],200);
     }
 
+    public function update(Request $request, userService $userService, $id){
+
+    }
+
 }
