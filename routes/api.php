@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\KecamatanController;
 use App\Http\Controllers\Api\KelurahanController;
 use App\Http\Controllers\Api\KotaController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProvinsiController;
+use App\Http\Controllers\Api\SalesTransactionController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UnitUsahaController;
 use App\Http\Controllers\Api\UserController;
@@ -43,6 +45,15 @@ Route::prefix('unit-usaha')->group(function(){
     Route::get('/{id}',[UnitUsahaController::class, 'show']);
 });
 
+Route::prefix('client')->group(function(){
+    Route::post('/{id}',[ClientController::class, 'update']);
+    Route::post('/',[ClientController::class, 'store']);
+    Route::get('/',[ClientController::class, 'index']);
+    Route::get('/options',[ClientController::class, 'getOptions']);
+    Route::delete('/{id}',[ClientController::class, 'destroy']);
+    Route::get('/{id}',[ClientController::class, 'show']);
+});
+
 Route::prefix('produk')->group(function(){
     Route::post('/edit/{id}',[ProductController::class, 'update']);
     Route::post('/',[ProductController::class, 'store']);
@@ -54,12 +65,12 @@ Route::prefix('produk')->group(function(){
 });
 
 Route::prefix('transaksi')->group(function(){
-    Route::post('/{id}',[TransactionController::class, 'update']);
+    Route::put('/{id}',[TransactionController::class, 'update']);
     Route::post('/',[TransactionController::class, 'store']);
     Route::get('/',[TransactionController::class, 'index']);
     Route::delete('/{id}',[TransactionController::class, 'destroy']);
-    Route::get('/{id}',[TransactionController::class, 'show']);
-    Route::get('/withFilter/{id}',[TransactionController::class, 'showWithFilter']);
+    Route::get('/show/{id}',[TransactionController::class, 'show']);
+    Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
 });
 
 Route::prefix('provinsi')->group(function(){
@@ -67,7 +78,7 @@ Route::prefix('provinsi')->group(function(){
     Route::post('/',[ProvinsiController::class, 'store']);
     Route::get('/',[ProvinsiController::class, 'index']);
     Route::delete('/{id}',[ProvinsiController::class, 'destroy']);
-    Route::get('/{id}',[ProvinsiController::class, 'show']);
+    Route::get('/{id}/all',[ProvinsiController::class, 'showAllById']);
     Route::get('/withFilter/{id}',[ProvinsiController::class, 'showWithFilter']);
 });
 
@@ -77,6 +88,7 @@ Route::prefix('kota')->group(function(){
     Route::get('/',[KotaController::class, 'index']);
     Route::delete('/{id}',[KotaController::class, 'destroy']);
     Route::get('/{id}',[KotaController::class, 'show']);
+    Route::get('/{id}/all',[KotaController::class, 'showAllById']);
     Route::get('/withFilter/{id}',[KotaController::class, 'showWithFilter']);
 });
 
@@ -86,6 +98,7 @@ Route::prefix('kecamatan')->group(function(){
     Route::get('/',[KecamatanController::class, 'index']);
     Route::delete('/{id}',[KecamatanController::class, 'destroy']);
     Route::get('/{id}',[KecamatanController::class, 'show']);
+    Route::get('/{id}/all',[KecamatanController::class, 'showAllById']);
     Route::get('/withFilter/{id}',[KecamatanController::class, 'showWithFilter']);
 });
 
@@ -95,5 +108,16 @@ Route::prefix('kelurahan')->group(function(){
     Route::get('/',[KelurahanController::class, 'index']);
     Route::delete('/{id}',[KelurahanController::class, 'destroy']);
     Route::get('/{id}',[KelurahanController::class, 'show']);
+    Route::get('/{id}/all',[KelurahanController::class, 'showAllById']);
     Route::get('/withFilter/{id}',[KelurahanController::class, 'showWithFilter']);
+});
+
+Route::prefix('penjualan')->group(function(){
+    Route::put('/{id}',[SalesTransactionController::class, 'edit']);
+    Route::post('/',[SalesTransactionController::class, 'store']);
+    Route::get('/',[SalesTransactionController::class, 'index']);
+    Route::delete('/{id}',[SalesTransactionController::class, 'destroy']);
+    Route::get('/{id}',[SalesTransactionController::class, 'show']);
+    Route::get('/{id}/all',[SalesTransactionController::class, 'showAllById']);
+    Route::get('/withFilter/{id}',[SalesTransactionController::class, 'showWithFilter']);
 });

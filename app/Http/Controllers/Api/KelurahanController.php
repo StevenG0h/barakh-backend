@@ -34,6 +34,12 @@ class KelurahanController extends Controller
         return $kelurahan;
     }
 
+    public function showAllById(string $id)
+    {
+        $kota = Kelurahan::where('id',$id)->get();
+        return response($kota,200);
+    }
+
     public function destroy(string $id, KelurahanService $service)
     {
         $service = $service->deleteKelurahan($id);

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->enum('transactionType',['PENGELUARAN','PEMASUKANLAIN','PENJUALAN']);
+            $table->enum('transactionStatus',['TERVERIFIKASI','BELUMTERVERIFIKASI','DITUNDA','PENGIRIMAN','SELESAI'])->default('BELUMTERVERIFIKASI');
             $table->timestamps();
         });
     }

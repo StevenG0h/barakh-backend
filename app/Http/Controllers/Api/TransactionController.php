@@ -11,21 +11,32 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $provinsi = Transaction::all();
+        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->paginate(50);
         return response([
-            "data"=>$provinsi
+            "data"=>$transaction
         ],200);
     }
 
     public function store(Request $request, TransactionService $service){
-        $provinsi = $service->createTransaction($request->all());
-        return response($provinsi, 201);
+        $transaction = $service->createTransaction($request->all());
+        return response($transaction, 201);
+    }
+   
+    public function update(String $id, Request $request, TransactionService $service){
+        $transaction = $service->updateTransaction($id, $request->all());
+        return response($transaction, 201);
     }
 
     public function show(string $id)
     {
-        $provinsi = Transaction::where('id',$id)->first();
-        return response($provinsi,200);
+        $transaction = Transaction::where('id',$id)->first();
+        return response($transaction,200);
+    }
+
+    public function showPenjualan()
+    {
+        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->where('transactionType','PENJUALAN')->paginate(50);
+        return response($transaction,200);
     }
 
 }

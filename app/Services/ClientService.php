@@ -9,13 +9,16 @@ use App\Models\Client;
 
         public function createClient(Array $data): Client{
             $validation =  $this->createClientValidator($data)->validate();
+            $isCreated = Client::where('clientNum',$validation['clientNum'])->first();
+            if($isCreated){
+                return $this->updateClient($isCreated, $data);
+            }
             $client = Client::create($validation);
             return $client;
         }
 
-        public function updateClient($id,Array $data): Client{
+        public function updateClient(Client $client,Array $data): Client{
             $validation =  $this->UpdateClientValidator($data)->validate();
-            $client = Client::findOrFail($id);
             $client->update($validation);
             return $client;
         }

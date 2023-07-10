@@ -6,9 +6,8 @@
         public function CreateClientValidator(Array $data){
             $validator = Validator::make($data,[
                 'clientName'=>'required',
-                'clientProvinsi'=>'required',
-                'clientKota'=>'required',
-                'clientKecamatan'=>'required',
+                'clientEmail'=>'required',
+                'clientNum'=>'required',
                 'clientKelurahan'=>'required',
                 'clientAddress'=>'required'
             ]);

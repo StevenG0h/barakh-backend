@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('usahaName');
             $table->string('usahaImage');
             $table->string('usahaDesc');
+            $table->string('usahaPicNumber');
             $table->timestamps();
         });
     }

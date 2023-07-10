@@ -9,14 +9,17 @@ use App\Models\Transaction;
     class TransactionService{
         use TransactionTrait;
 
-        public function createTransaction(Array $data): Transaction{
+        public function createTransaction(Array $data){
             $type = $data['transactionType'];
             if($type == "PENJUALAN"){
                 $validation =  $this->createTransactionValidator($data)->validate();
                 $transaction = Transaction::create($validation);
-                $salesData = $validation;
-                $salesData['transaction_id'] = $transaction->id;
-                $sales = salesTransaction::create($salesData);
+                $validation['transaction_id'] = $transaction->id;
+                $formatted = $this->CreateTransactionFormatter($validation, $transaction);
+                for($i=0;$i<count($formatted);$i++){
+                    salesTransaction::create($formatted[$i]);
+                }
+                return response('',200);
             }else if($type == "PEMASUKANLAIN"){
                 $validation =  $this->CreateOtherTransactionValidator($data)->validate();
                 $transaction = Transaction::create($validation);

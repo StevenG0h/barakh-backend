@@ -33,7 +33,7 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $provinsi = Product::where('id',$id)->with(['unitUsaha'])->first();
+        $provinsi = Product::where('id',$id)->with(['unitUsaha','productImages'])->first();
         return response($provinsi,200);
     }
     

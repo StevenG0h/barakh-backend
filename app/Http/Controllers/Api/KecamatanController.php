@@ -27,6 +27,12 @@ class KecamatanController extends Controller
         return response($kecamatan,200);
     }
 
+    public function showAllById(string $id)
+    {
+        $kota = kecamatan::where('id',$id)->get();
+        return response($kota,200);
+    }
+
     public function update(Request $request, string $id, kecamatanService $service)
     {
         $kecamatan = $service->updatekecamatan($id,$request->all());

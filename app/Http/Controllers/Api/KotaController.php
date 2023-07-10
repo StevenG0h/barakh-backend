@@ -27,6 +27,12 @@ class KotaController extends Controller
         $kota = Kota::where('id',$id)->first();
         return response($kota,200);
     }
+    
+    public function showAllById(string $id)
+    {
+        $kota = Kota::where('id',$id)->get();
+        return response($kota,200);
+    }
 
     public function update(Request $request, string $id, KotaService $service)
     {

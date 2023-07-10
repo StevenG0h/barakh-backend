@@ -7,15 +7,29 @@
             $validator = Validator::make($data,[
                 'transactionType'=>'required',
                 'kelurahan_id'=>'required',
-                'transactionAddress'=>'required',
-                'product_id'=>'required',
-                'productPrice'=>'required',
-                'productCount'=>'required',
                 'client_id'=>'required',
-                'admin_id'=>'required',
-                'transactionStatus'=>'required'
+                'transactionAddress'=>'required',
+                'product.*.productData.id'=>'required',
+                'product.*.productData.productPrice'=>'required',
+                'product.*.item'=>'required'
             ]);
             return $validator;
+        }
+
+        public function CreateTransactionFormatter(Array $data, $transactionData){
+            $salesTransaction = [];
+            for($i=0; $i<count($data['product']);$i++){
+                $transaction['transaction_id']= $data['transaction_id'];
+                $transaction['kelurahan_id']= $data['kelurahan_id'];
+                $transaction['client_id']= $data['client_id'];
+                $transaction['product_id'] = $data['product'][$i]['productData']['id'];
+                $transaction['productCount'] = $data['product'][$i]['item'];
+                $transaction['productPrice'] = $data['product'][$i]['productData']['productPrice'];
+                $transaction['transactionAddress'] = $data['transactionAddress'];
+                $transaction['transactionAmount']= $data['product'][$i]['productData']['productPrice'];
+                array_push($salesTransaction,$transaction);
+            }
+            return $salesTransaction;
         }
        
         public function CreateOtherTransactionValidator(Array $data){
