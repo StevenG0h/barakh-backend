@@ -39,7 +39,7 @@ class ProductController extends Controller
     
     public function showWithFilter(string $id)
     {
-        $provinsi = Product::where('unit_usaha_id',$id)->get();
+        $provinsi = Product::with(['productImages','unitUsaha'])->where('unit_usaha_id',$id)->get();
         return response($provinsi,200);
     }
 

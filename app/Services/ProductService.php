@@ -72,5 +72,6 @@ use Illuminate\Support\Facades\Storage;
             $product->delete();
             return $product;
         }
+        
     }
 ?>

@@ -18,7 +18,7 @@ use Illuminate\Validation\Rules\File;
             $validator = Validator::make($data,[
                 'usahaName'=>'sometimes',
                 'usahaDesc'=>'sometimes',
-                'usahaImage'=>['sometimes',File::image()]
+                'usahaImage'=>['sometimes']
             ]);
             return $validator;
         }

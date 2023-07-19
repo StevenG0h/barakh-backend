@@ -13,4 +13,7 @@ class Transaction extends Model
     public function sales(){
         return $this->hasMany(salesTransaction::class);
     }
+    public function spending(){
+        return $this->hasOne(SpendingTransaction::class);
+    }
 }

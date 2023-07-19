@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
         public function updateUnitUsaha($id,Array $data, $file): UnitUsaha{
             $validation =  $this->UpdateUnitUsahaValidator($data)->validate();
             $unitUsaha = UnitUsaha::findOrFail($id);
-            if(!empty($validation['usahaImage'])){
+            if(gettype($validation['usahaImage']) != 'string'){
                 try{
                     Storage::delete('public/unitUsaha/'.$unitUsaha->usahaImage);
                 }catch(Exception $e){

@@ -11,7 +11,7 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->paginate(50);
+        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan','spending.unitUsaha'])->orderBy('updated_at','desc')->paginate(50);
         return response([
             "data"=>$transaction
         ],200);

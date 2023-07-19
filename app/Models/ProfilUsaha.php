@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SpendingTransaction extends Model
+class ProfilUsaha extends Model
 {
     use HasFactory;
 
@@ -13,5 +13,9 @@ class SpendingTransaction extends Model
 
     public function unitUsaha(){
         return $this->belongsTo(UnitUsaha::class);
+    }
+
+    public function profilUsahaImages(){
+        return $this->hasMany(ProfilUsahaImages::class)->orderBy('order','asc');
     }
 }

@@ -1,8 +1,10 @@
 <?php 
     namespace App\Http\Traits;
 
-    use Illuminate\Contracts\Validation\Validator as ValidationValidator;
+use App\Models\User;
+use Illuminate\Contracts\Validation\Validator as ValidationValidator;
     use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
     trait AdminTrait{
         public function CreateAdminValidator(Array $data) : ValidationValidator{
@@ -14,11 +16,12 @@
             ]);
             return $validator;
         }
-        public function UpdateAdminValidator(Array $data) : ValidationValidator{
+
+        public function UpdateAdminValidator(Array $data, User $user) : ValidationValidator{
             $validator = Validator::make($data,[
                 'adminName'=>['sometimes'],
-                'adminNum'=>['sometimes','unique:admins,adminNum'],
-                'email'=>['sometimes','email','unique:users,email'],
+                'adminNum'=>['sometimes',Rule::unique('admins','adminNum')->ignore($user->id)],
+                'email'=>['sometimes','email', Rule::unique('users','email')->ignore($user->id)],
                 'password'=>['confirmed','min:8']
             ]);
             return $validator;

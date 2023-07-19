@@ -3,6 +3,29 @@
     use Illuminate\Support\Facades\Validator;
 
     trait TransactionTrait{
+        public function CreateSpendingTransaction(Array $data){
+            $validator = Validator::make($data,[
+                'transactionType'=>'required',
+                'unit_usaha_id'=>'required',
+                'SpendingName'=>'required',
+                'SpendingDescription'=>'required',
+                'SpendingValue'=>'required'
+            ]);
+            return $validator;
+        }
+        
+        public function UpdateSpendingTransaction(Array $data){
+            $validator = Validator::make($data,[
+                'transaction_id'=>'required',
+                'transactionType'=>'sometimes',
+                'unit_usaha_id'=>'sometimes',
+                'SpendingName'=>'sometimes',
+                'SpendingDescription'=>'sometimes',
+                'SpendingValue'=>'sometimes'
+            ]);
+            return $validator;
+        }
+
         public function CreateTransactionValidator(Array $data){
             $validator = Validator::make($data,[
                 'transactionType'=>'required',

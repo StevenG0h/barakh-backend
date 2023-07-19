@@ -9,19 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void  
+    public function up(): void
     {
-        Schema::create('spending_transactions', function (Blueprint $table) {
+        Schema::create('profil_usahas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('unit_usaha_id');
-            $table->unsignedBigInteger('transaction_id');
-            $table->string('SpendingName');
-            $table->string('SpendingDescription');
-            $table->string('SpendingValue');
+            $table->text('profil_usaha_desc');
             $table->timestamps();
 
             $table->foreign('unit_usaha_id')->references('id')->on('unit_usahas');
-            $table->foreign('transaction_id')->references('id')->on('transactions');
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('spendingtransactions');
+        Schema::dropIfExists('profil_usahas');
     }
 };
