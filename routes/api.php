@@ -231,6 +231,9 @@ Route::prefix('kelurahan')->group(function(){
     Route::get('/withFilter/{id}',[KelurahanController::class, 'showWithFilter']);
 });
 
-Route::prefix('/dashboard')->group(function(){
-    Route::post('/penjualanStat',[DashboardController::class,'ProdukTerlaris']);
+Route::prefix('dashboard')->group(function(){
+    Route::post('/penjualanStat',[DashboardController::class,'penjualanStat']);
+    Route::post('/produkTerlaris',[DashboardController::class,'ProdukTerlaris']);
+    Route::post('/totalStok',[DashboardController::class,'totalStok']);
+    Route::post('/pelangganStat',[DashboardController::class,'pelangganStat']);
 });
