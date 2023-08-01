@@ -9,5 +9,9 @@ class Kelurahan extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['kelurahanId'];
+    protected $guarded = ['id'];
+
+    public function kecamatan(){
+        return $this->belongsTo(Kecamatan::class,'kecamatanId');
+    }
 }

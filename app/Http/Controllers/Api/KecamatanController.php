@@ -29,7 +29,7 @@ class KecamatanController extends Controller
 
     public function showAllById(string $id)
     {
-        $kota = kecamatan::where('id',$id)->get();
+        $kota = kecamatan::where('kotaId',$id)->get();
         return response($kota,200);
     }
 

@@ -30,7 +30,7 @@ class KotaController extends Controller
     
     public function showAllById(string $id)
     {
-        $kota = Kota::where('id',$id)->get();
+        $kota = Kota::where('provinsiId',$id)->get();
         return response($kota,200);
     }
 

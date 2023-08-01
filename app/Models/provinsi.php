@@ -9,5 +9,5 @@ class Provinsi extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['provinsiId'];
+    protected $guarded = ['id'];
 }

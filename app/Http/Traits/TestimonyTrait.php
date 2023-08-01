@@ -6,7 +6,7 @@
         public function CreateTestimonyValidator(Array $data){
             $validator = Validator::make($data,[
                 'testimonyDesc'=>'required',
-                'testimonyImage'=>'required'
+                'clientName'=>'required'
             ]);
             return $validator;
         }
@@ -14,7 +14,7 @@
         public function UpdateTestimonyValidator(Array $data){
             $validator = Validator::make($data,[
                 'testimonyDesc'=>'sometimes',
-                'testimonyImage'=>'sometimes'
+                'clientName'=>'sometimes'
             ]);
             return $validator;
         }

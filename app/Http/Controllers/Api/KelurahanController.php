@@ -36,7 +36,7 @@ class KelurahanController extends Controller
 
     public function showAllById(string $id)
     {
-        $kota = Kelurahan::where('id',$id)->get();
+        $kota = Kelurahan::where('kecamatanId',$id)->get();
         return response($kota,200);
     }
 

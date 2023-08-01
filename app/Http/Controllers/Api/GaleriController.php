@@ -28,7 +28,7 @@ class GaleriController extends Controller
         return response($galeri,200);
     }
 
-    public function update(Request $request, string $id, GaleriService $service)
+    public function edit(Request $request, string $id, GaleriService $service)
     {
         $galeri = $service->updateGaleri($id,$request->all(),$request->file());
         return $galeri;

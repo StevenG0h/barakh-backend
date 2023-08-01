@@ -9,5 +9,9 @@ class Kota extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['kotaId'];
+    protected $guarded = ['id'];
+
+    public function provinsi(){
+        return $this->belongsTo(Provinsi::class,'provinsiId');
+    }
 }

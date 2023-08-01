@@ -11,7 +11,7 @@ class TestimonyController extends Controller
 {
     public function index()
     {
-        $provinsi = Testimony::all();
+        $provinsi = Testimony::paginate(25);
         return response([
             "data"=>$provinsi
         ],200);

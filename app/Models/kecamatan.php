@@ -9,5 +9,13 @@ class Kecamatan extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['kecamatanId'];
+    protected $guarded = ['id'];
+
+    public function kota(){
+        return $this->belongsTo(Kota::class,'kotaId');
+    }
+
+    public function kelurahan(){
+        return $this->hasMany(Kelurahan::class);
+    }
 }

@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Storage;
 
         public function deleteGaleri($id): Galeri{
             $galeri = Galeri::findOrFail($id);
+            Storage::delete('public/galeri/'.$galeri->path);
             $galeri->delete();
             return $galeri;
         }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\GaleriController;
 use App\Http\Controllers\Api\KecamatanController;
 use App\Http\Controllers\Api\KelurahanController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProfilUsahaController;
 use App\Http\Controllers\Api\ProvinsiController;
 use App\Http\Controllers\Api\SalesTransactionController;
+use App\Http\Controllers\Api\TestimonyController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UnitUsahaController;
 use App\Http\Controllers\Api\UserController;
@@ -35,6 +37,8 @@ Route::middleware(['auth:sanctum'])->group(function (){
             return $request->user();
         });
 
+        
+
         Route::prefix('/admin')->group(function(){
             Route::get('/',[UserController::class,'index']);
             Route::put('/{id}',[UserController::class,'edit']);
@@ -55,10 +59,12 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::delete('/{id}',[UnitUsahaController::class, 'destroy']);
             Route::get('/{id}',[UnitUsahaController::class, 'show']);
         });
+
         Route::post('/register',[AuthController::class,'register']);
         Route::get('/logout',function(Request $request){
             return $request->user()->currentAccessToken()->delete();
         });
+
         Route::prefix('client')->group(function(){
             Route::post('/{id}',[ClientController::class, 'update']);
             Route::post('/',[ClientController::class, 'store']);
@@ -131,6 +137,14 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::delete('/{id}',[TransactionController::class, 'destroy']);
             Route::get('/show/{id}',[TransactionController::class, 'show']);
             Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
+        });
+        
+        Route::prefix('testimoni')->group(function(){
+            Route::put('/{id}',[TestimonyController::class, 'update']);
+            Route::post('/',[TestimonyController::class, 'store']);
+            Route::get('/',[TestimonyController::class, 'index']);
+            Route::delete('/{id}',[TestimonyController::class, 'destroy']);
+            Route::get('/show/{id}',[TestimonyController::class, 'show']);
         });
     });
 });
@@ -217,3 +231,6 @@ Route::prefix('kelurahan')->group(function(){
     Route::get('/withFilter/{id}',[KelurahanController::class, 'showWithFilter']);
 });
 
+Route::prefix('/dashboard')->group(function(){
+    Route::post('/penjualanStat',[DashboardController::class,'ProdukTerlaris']);
+});
