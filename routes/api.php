@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\TestimonyController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UnitUsahaController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VisitorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -232,8 +233,9 @@ Route::prefix('kelurahan')->group(function(){
 });
 
 Route::prefix('dashboard')->group(function(){
-    Route::post('/penjualanStat',[DashboardController::class,'penjualanStat']);
-    Route::post('/produkTerlaris',[DashboardController::class,'ProdukTerlaris']);
-    Route::post('/totalStok',[DashboardController::class,'totalStok']);
-    Route::post('/pelangganStat',[DashboardController::class,'pelangganStat']);
+    Route::post('/',[DashboardController::class,'index']);
+});
+
+Route::prefix('visitor')->group(function(){
+    Route::get('/',[VisitorController::class,'index']);
 });

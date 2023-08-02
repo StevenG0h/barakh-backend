@@ -7,11 +7,30 @@ use App\Models\Product;
 use App\Http\Controllers\Api\Client;
 use App\Models\Client as ModelsClient;
 use App\Models\salesTransaction;
+use App\Models\SpendingTransaction;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    public function index(Request $request){
+      #return $request->all();
+      $penjualan = $this->penjualanStat($request);
+      $ProdukTerlaris = $this->ProdukTerlaris($request);
+      $totalStok = $this->totalStok($request);
+      $pelangganStat = $this->pelangganStat($request);
+      $pengeluaran = $this->pengeluaran($request);
+      $visitor =$this->visitor($request);
+      return response(['penjualan'=>$penjualan,
+      'produkTerlaris'=>$ProdukTerlaris,
+      'totalStok'=>$totalStok,
+      'pelangganStat'=>$pelangganStat,
+      'pengeluaran'=>$pengeluaran,
+      'visitor'=>$visitor
+      ],200);
+    }
+
     public function penjualanStat(Request $request){
         $data = $request->all();
         $from = date($data['from']);
@@ -32,15 +51,64 @@ class DashboardController extends Controller
           $location = 'provinsi';
           $locationId = $data['provinsi'];
         }
-
+        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
+          $stat =  salesTransaction::select( 
+            \DB::raw('SUM(productPrice * productCount) as total'), 
+            \DB::raw('SUM(productCount) as countPenjualan'), 
+            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+          )->whereRelation($location,'id',$locationId)
+          ->whereBetween('created_at',[$from,$to])
+          ->groupBy('month', 'year')->get();
+          return $stat;
+        }
         $stat =  salesTransaction::select( 
             \DB::raw('SUM(productPrice * productCount) as total'), 
+            \DB::raw('SUM(productCount) as countPenjualan'), 
             \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
             \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
           )->whereRelation($location,'id',$locationId)
           ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
           ->whereBetween('created_at',[$from,$to])
           ->groupBy('month', 'year')->get();
+        return $stat;
+    }
+    
+    public function pengeluaran(Request $request){
+        $data = $request->all();
+        $from = date($data['from']);
+        $to = date($data['to']);
+
+        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
+          $stat =  SpendingTransaction::select( 
+            \DB::raw('SUM(spendingValue) as total'), 
+            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+          )
+          ->whereBetween('created_at',[$from,$to])
+          ->groupBy('month', 'year')->get();
+        }
+
+        $stat =  SpendingTransaction::select( 
+            \DB::raw('SUM(spendingValue) as total'), 
+            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+          )
+          ->whereRelation('unitUsaha','id',$data['unitUsaha'])
+          ->whereBetween('created_at',[$from,$to])
+          ->groupBy('month', 'year')->get();
+        return $stat;
+    }
+    
+    public function visitor(Request $request){
+        $data = $request->all();
+        $from = date($data['from']);
+        $to = date($data['to']);
+
+        $stat =  Visitor::select( 
+            \DB::raw('SUM(count) as total')
+          )
+          ->whereBetween('created_at',[$from,$to])->get();
         return $stat;
     }
 
@@ -65,6 +133,15 @@ class DashboardController extends Controller
           $locationId = $data['provinsi'];
         }
 
+        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
+          $stat =  salesTransaction::select( 
+            \DB::raw('COUNT(product_id) as total'),
+            'product_id'
+          )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+          ->whereBetween('created_at',[$from,$to])
+          ->groupBy('product_id')->get();
+        }
+
         $stat =  salesTransaction::select( 
             \DB::raw('COUNT(product_id) as total'),
             'product_id'
@@ -79,6 +156,18 @@ class DashboardController extends Controller
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        
+        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
+          $stat =  Product::select( 
+            \DB::raw('SUM(productStock) as total'),
+            'unit_usaha_id'
+          )->with(['unitUsaha'])
+          ->whereBetween('created_at',[$from,$to])
+          ->groupBy('unit_usaha_id')
+          ->get();
+          return $stat;
+        }
+
         $stat =  Product::select( 
           \DB::raw('SUM(productStock) as total'),
           'unit_usaha_id'
@@ -118,6 +207,15 @@ class DashboardController extends Controller
       // ->whereBetween('created_at',[$from,$to])
       // ->groupBy('unit_usaha_id')
       // ->get();
+
+      if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
+        $stat = salesTransaction::distinct()
+          ->whereRelation($location,'id',$locationId)
+          ->whereBetween('created_at',[$from,$to])
+          ->count('client_id');
+        return $stat;
+      }
+
       $stat = salesTransaction::distinct()
       ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
       ->whereRelation($location,'id',$locationId)
