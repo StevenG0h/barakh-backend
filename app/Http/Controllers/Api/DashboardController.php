@@ -10,6 +10,7 @@ use App\Models\salesTransaction;
 use App\Models\SpendingTransaction;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -33,6 +34,7 @@ class DashboardController extends Controller
 
     public function penjualanStat(Request $request){
         $data = $request->all();
+        $date = date(Carbon::now());
         $from = date($data['from']);
         $to = date($data['to']);
 
@@ -51,59 +53,202 @@ class DashboardController extends Controller
           $location = 'provinsi';
           $locationId = $data['provinsi'];
         }
-        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
-          $stat =  salesTransaction::select( 
-            \DB::raw('SUM(productPrice * productCount) as total'), 
-            \DB::raw('SUM(productCount) as countPenjualan'), 
-            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
-            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
-          )->whereRelation($location,'id',$locationId)
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('month', 'year')->get();
-          return $stat;
+
+        if(!isset($data['unitUsaha'])){
+          if(!$from=='' && !$to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } 
+          else if(!$from==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } else if(!$to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } else {
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          }
+        } 
+        else {
+          if(!$from=="" && !$to==""){
+            
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } 
+          else if(!$from==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } 
+          else if(!$to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } 
+          else {
+            $stat =  salesTransaction::select( 
+              \DB::raw('SUM(productPrice * productCount) as total'), 
+              \DB::raw('SUM(productCount) as countPenjualan'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          }
         }
-        $stat =  salesTransaction::select( 
-            \DB::raw('SUM(productPrice * productCount) as total'), 
-            \DB::raw('SUM(productCount) as countPenjualan'), 
-            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
-            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
-          )->whereRelation($location,'id',$locationId)
-          ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('month', 'year')->get();
-        return $stat;
+
     }
     
     public function pengeluaran(Request $request){
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        $date = date(Carbon::now());
 
-        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
-          $stat =  SpendingTransaction::select( 
-            \DB::raw('SUM(spendingValue) as total'), 
-            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
-            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
-          )
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('month', 'year')->get();
+        if(!isset($data['unitUsaha'])){
+          if(!$from=='' && !$to==''){
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          }
+          else if(!$from==''){
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          }
+          else if(!$to==''){
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } else {
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          }
         }
-
-        $stat =  SpendingTransaction::select( 
-            \DB::raw('SUM(spendingValue) as total'), 
-            \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
-            \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
-          )
-          ->whereRelation('unitUsaha','id',$data['unitUsaha'])
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('month', 'year')->get();
-        return $stat;
+        else {
+          if(!$from=="" && !$to==""){
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereRelation('unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } else if(!$from="") {
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereRelation('unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } else if(!$to="") {
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereRelation('unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          } else {
+            $stat =  SpendingTransaction::select( 
+              \DB::raw('SUM(spendingValue) as total'), 
+              \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
+              \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
+            )
+            ->whereRelation('unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('month', 'year')->get();
+            return $stat;
+          }
+        }
     }
     
     public function visitor(Request $request){
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        $date = date(Carbon::now());+-**79++++++++++++++++++++++++++
 
         $stat =  Visitor::select( 
             \DB::raw('SUM(count) as total')
