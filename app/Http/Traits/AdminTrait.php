@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
                 'adminName'=>['required'],
                 'adminNum'=>['required','unique:admins,adminNum'],
                 'email'=>['required','email','unique:users,email'],
+                'unit_usaha_id'=>['sometimes'],
                 'password'=>['confirmed','min:8']
             ]);
             return $validator;
@@ -20,8 +21,8 @@ use Illuminate\Validation\Rule;
         public function UpdateAdminValidator(Array $data, User $user) : ValidationValidator{
             $validator = Validator::make($data,[
                 'adminName'=>['sometimes'],
-                'adminNum'=>['sometimes',Rule::unique('admins','adminNum')->ignore($user->id)],
-                'email'=>['sometimes','email', Rule::unique('users','email')->ignore($user->id)],
+                'adminNum'=>['sometimes'],
+                'email'=>['sometimes','email'],
                 'password'=>['confirmed','min:8']
             ]);
             return $validator;

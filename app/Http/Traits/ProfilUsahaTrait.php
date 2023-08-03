@@ -7,7 +7,7 @@
             $validator = Validator::make($data,[
                 'unit_usaha_id'=>'required',
                 'profil_usaha_desc'=>'required',
-                'profilUsahaImages.*'=>'required|image',
+                'profilUsahaImages.*'=>'required',
             ]);
             return $validator;
         }

@@ -13,15 +13,14 @@ use Illuminate\Support\Facades\Hash;
             $validation =  $this->CreateAdminValidator($data)->validate();
             $user = new User;
             $admin = new Admin();
-            
             $user->email = $validation['email'];
             $user->password = Hash::make($data['password']);
             $user->save();
-
             $admin->adminName = $validation['adminName'];
             $admin->adminNum = $validation['adminNum'];
             $admin->adminLevel = '0';
             $admin->user_id = $user->id;
+            $admin->unit_usaha_id = $data['unit_usaha_id'];
             $admin->save();
             
             return $user;
@@ -38,7 +37,6 @@ use Illuminate\Support\Facades\Hash;
 
             $admin->adminName = $validation['adminName'];
             $admin->adminNum = $validation['adminNum'];
-            $admin->user_id = $user->id;
             $admin->save();
             
             return $user;

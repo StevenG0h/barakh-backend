@@ -8,7 +8,6 @@ use Illuminate\Validation\Rules\File;
             $validator = Validator::make($data,[
                 'usahaName'=>'required',
                 'usahaDesc'=>'required',
-                'usahaPicNumber'=>'required',
                 'usahaImage'=>['required',File::image()]
             ]);
             return $validator;

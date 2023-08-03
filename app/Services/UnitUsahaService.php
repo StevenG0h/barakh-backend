@@ -3,6 +3,7 @@
 
 use App\Http\Traits\UnitUsahaTrait;
 use App\Models\UnitUsaha;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
@@ -10,11 +11,15 @@ use Illuminate\Support\Facades\Storage;
     class UnitUsahaService{
         use UnitUsahaTrait;
 
-        public function createUnitUsaha(Array $data, $file): unitUsaha{
+        public function createUnitUsaha(Array $data, $file):UnitUsaha{
+            $pegawai = new UserService();
             $validation =  $this->createUnitUsahaValidator($data)->validate();
+            $adminValidation = $pegawai->CreateAdminValidator($data)->validate();
             $storage = Storage::putFileAs('public/unitUsaha/', $validation['usahaImage'], $validation['usahaName'].'.'.$file->getClientOriginalExtension());
             $validation['usahaImage'] = $validation['usahaName'].'.'.$file->getClientOriginalExtension();
             $unitUsaha = UnitUsaha::create($validation);
+            $data['unit_usaha_id'] = $unitUsaha->id;
+            $pegawai->createUser($data);
             return $unitUsaha;
         }
 
