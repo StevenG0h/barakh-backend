@@ -17,4 +17,8 @@ class Product extends Model
     public function unitUsaha(){
         return $this->belongsTo(UnitUsaha::class);
     }
+
+    public function rating(){
+        return $this->belongsTo(Rating::class);
+    }
 }

@@ -4,7 +4,11 @@
 use App\Http\Traits\ProductTrait;
 use App\Models\Product;
 use App\Models\ProductImg;
+use App\Models\rating;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Storage;
+use Termwind\Components\Raw;
 
     class ProductService{
         use ProductTrait;
@@ -73,5 +77,11 @@ use Illuminate\Support\Facades\Storage;
             return $product;
         }
         
+        public function addRating($id, Array $data):rating{
+            $product = Product::findOrFail($id);
+            $rating = new rating();
+            $rating::create($data);
+            return $rating;
+        }
     }
 ?>

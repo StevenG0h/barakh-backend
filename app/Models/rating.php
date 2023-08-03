@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class rating extends Model
 {
     use HasFactory;
-    protected $table = 'rating';
+    protected $table = 'ratings';
     protected $guarded = ['id'];
 }

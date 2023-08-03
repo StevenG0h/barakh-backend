@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\KotaController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProfilUsahaController;
 use App\Http\Controllers\Api\ProvinsiController;
+use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\SalesTransactionController;
 use App\Http\Controllers\Api\TestimonyController;
 use App\Http\Controllers\Api\TransactionController;
@@ -181,6 +182,7 @@ Route::prefix('unit-usaha')->group(function(){
 Route::prefix('produk')->group(function(){
     Route::post('/edit/{id}',[ProductController::class, 'update']);
     Route::post('/',[ProductController::class, 'store']);
+    Route::put('/rating/{id}',[RatingController::class, 'store']);
     Route::post('/get-cart',[ProductController::class, 'getCart']);
     Route::get('/',[ProductController::class, 'index']);
     Route::delete('/{id}',[ProductController::class, 'destroy']);
