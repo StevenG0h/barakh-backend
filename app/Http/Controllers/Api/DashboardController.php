@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
         if(!isset($data['unitUsaha'])){
           if(!$from=='' && !$to==''){
-            $stat =  salesTransaction::select( 
+            $stat = salesTransaction::select( 
               \DB::raw('SUM(productPrice * productCount) as total'), 
               \DB::raw('SUM(productCount) as countPenjualan'), 
               \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
@@ -67,7 +67,7 @@ class DashboardController extends Controller
             return $stat;
           } 
           else if(!$from==''){
-            $stat =  salesTransaction::select( 
+            $stat = salesTransaction::select( 
               \DB::raw('SUM(productPrice * productCount) as total'), 
               \DB::raw('SUM(productCount) as countPenjualan'), 
               \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
@@ -248,19 +248,41 @@ class DashboardController extends Controller
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
-        $date = date(Carbon::now());+-**79++++++++++++++++++++++++++
+        $date = date(Carbon::now());
 
-        $stat =  Visitor::select( 
-            \DB::raw('SUM(count) as total')
-          )
-          ->whereBetween('created_at',[$from,$to])->get();
-        return $stat;
+        if(!$from=='' && !$to==''){
+          $stat =  Visitor::select( 
+              \DB::raw('SUM(count) as total')
+            )
+            ->whereBetween('created_at',[$from,$to])->get();
+          return $stat;
+        } else if (!$from==''){
+          $stat =  Visitor::select( 
+              \DB::raw('SUM(count) as total')
+            )
+            ->whereBetween('created_at',[$from,$date])->get();
+          return $stat;
+        } else if (!$to=''){
+          $stat =  Visitor::select( 
+              \DB::raw('SUM(count) as total')
+            )
+            ->whereBetween('created_at',['2020-01-01',$to])->get();
+          return $stat;
+        } else {
+          $stat =  Visitor::select( 
+              \DB::raw('SUM(count) as total')
+            )
+            ->whereBetween('created_at',['2020-01-01',$date])->get();
+          return $stat;
+        }
+
     }
 
     public function ProdukTerlaris(Request $request){
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        $date = date(Carbon::now());
 
         $location = 'kelurahan.kecamatan.kota.provinsi';
         $locationId = '';
@@ -278,56 +300,175 @@ class DashboardController extends Controller
           $locationId = $data['provinsi'];
         }
 
-        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
-          $stat =  salesTransaction::select( 
-            \DB::raw('COUNT(product_id) as total'),
-            'product_id'
-          )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('product_id')->get();
+        if(!isset($data['unitUsaha'])){
+          if(!$from=='' && $to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('product_id')->get();
+            return $stat;
+          } else if (!$from==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$$date])
+            ->groupBy('product_id')->get();
+            return $stat;
+          } else if (!$to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('product_id')->get();
+            return $stat;
+          } else {
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('product_id')->get();
+            return $stat;
+          }
+        } else {
+          if(!$from=='' && !$to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('product_id')->get();
+            return $stat;
+          } else if ($from==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('product_id')->get();
+            return $stat;
+          } else if ($to==''){
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('product_id')->get();
+            return $stat;
+          } else {
+            $stat =  salesTransaction::select( 
+              \DB::raw('COUNT(product_id) as total'),
+              'product_id'
+            )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('product_id')->get();
+            return $stat;
+          }
         }
-
-        $stat =  salesTransaction::select( 
-            \DB::raw('COUNT(product_id) as total'),
-            'product_id'
-          )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
-          ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('product_id')->get();
-        return $stat;
     }
 
     public function totalStok(Request $request){
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        $date = date(Carbon::now());
         
-        if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
-          $stat =  Product::select( 
-            \DB::raw('SUM(productStock) as total'),
-            'unit_usaha_id'
-          )->with(['unitUsaha'])
-          ->whereBetween('created_at',[$from,$to])
-          ->groupBy('unit_usaha_id')
-          ->get();
-          return $stat;
+        if(!isset($data['unitUsaha'])){
+          if(!$from=='' && $to==''){
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          } else if (!$from=''){
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          } else if (!$to==''){
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          } else {
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          }
+        } else {
+          if(!$from=='' && !$to=''){
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->where('unit_usaha_id','=',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$to])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          } else if (!$from==''){
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->where('unit_usaha_id','=',$data['unitUsaha'])
+            ->whereBetween('created_at',[$from,$date])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          } else if (!$to==''){
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->where('unit_usaha_id','=',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          } else {
+            $stat =  Product::select( 
+              \DB::raw('SUM(productStock) as total'),
+              'unit_usaha_id'
+            )->with(['product.unitUsaha'])
+            ->where('unit_usaha_id','=',$data['unitUsaha'])
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->groupBy('unit_usaha_id')
+            ->get();
+            return $stat;
+          }
         }
-
-        $stat =  Product::select( 
-          \DB::raw('SUM(productStock) as total'),
-          'unit_usaha_id'
-        )->with(['unitUsaha'])
-        ->where('unit_usaha_id','=',$data['unitUsaha'])
-        ->whereBetween('created_at',[$from,$to])
-        ->groupBy('unit_usaha_id')
-        ->get();
-        return $stat;
     }
 
     public function pelangganStat(Request $request){
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        $date = date(Carbon::now());
 
         $location = 'kelurahan.kecamatan.kota.provinsi';
         $locationId = '';
@@ -345,27 +486,63 @@ class DashboardController extends Controller
           $locationId = $data['provinsi'];
         }
 
-      // $stat =  ModelsClient::select( 
-      //   \DB::raw('COUNT(client_id) as total')
-      // )->with(['salesTransaction'])
-      // ->where('unit_usaha_id','=','1')
-      // ->whereBetween('created_at',[$from,$to])
-      // ->groupBy('unit_usaha_id')
-      // ->get();
-
-      if($data['unitUsaha'] == '' || !isset($data['unitUsaha'])){
-        $stat = salesTransaction::distinct()
-          ->whereRelation($location,'id',$locationId)
-          ->whereBetween('created_at',[$from,$to])
-          ->count('client_id');
-        return $stat;
+      if(!isset($data['unitUsaha'])){
+        if(!$from=='' && $to==''){
+          $stat = salesTransaction::distinct()
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$to])
+            ->count('client_id');
+          return $stat;
+        } else if(!$from==''){
+          $stat = salesTransaction::distinct()
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$date])
+            ->count('client_id');
+          return $stat;
+        } else if(!$to==''){
+          $stat = salesTransaction::distinct()
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->count('client_id');
+          return $stat;
+        } else {
+          $stat = salesTransaction::distinct()
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->count('client_id');
+          return $stat;
+        }
+      } else {
+        if(!$from=='' && !$to==''){
+          $stat = salesTransaction::distinct()
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$to])
+            ->count('client_id');
+          return $stat;
+        } else if(!$from==''){
+          $stat = salesTransaction::distinct()
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',[$from,$date])
+            ->count('client_id');
+          return $stat;
+        } else if(!$to==''){
+          $stat = salesTransaction::distinct()
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$to])
+            ->count('client_id');
+          return $stat;
+        } else {
+          $stat = salesTransaction::distinct()
+            ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
+            ->whereRelation($location,'id',$locationId)
+            ->whereBetween('created_at',['2020-01-01',$date])
+            ->count('client_id');
+          return $stat;
+        }
       }
 
-      $stat = salesTransaction::distinct()
-      ->whereRelation('product.unitUsaha','id',$data['unitUsaha'])
-      ->whereRelation($location,'id',$locationId)
-      ->whereBetween('created_at',[$from,$to])
-      ->count('client_id');
-      return $stat;
   }
 }

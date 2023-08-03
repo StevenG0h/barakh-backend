@@ -233,7 +233,6 @@ Route::prefix('kelurahan')->group(function(){
 });
 
 Route::prefix('dashboard')->group(function(){
-    Route::post('/penjualanStat',[DashboardController::class,'penjualanStat']);
     Route::post('/',[DashboardController::class,'index']);
 });
 
