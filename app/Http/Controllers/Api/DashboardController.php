@@ -23,7 +23,8 @@ class DashboardController extends Controller
       $pelangganStat = $this->pelangganStat($request);
       $pengeluaran = $this->pengeluaran($request);
       $visitor =$this->visitor($request);
-      return response(['penjualan'=>$penjualan,
+      return response([
+      'penjualan'=>$penjualan,
       'produkTerlaris'=>$ProdukTerlaris,
       'totalStok'=>$totalStok,
       'pelangganStat'=>$pelangganStat,
@@ -108,7 +109,6 @@ class DashboardController extends Controller
         $stat = $this->filterUnit($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
         return $stat->groupBy('month', 'year')->get();
-      
     }
     
     public function visitor(Request $request){
@@ -120,7 +120,7 @@ class DashboardController extends Controller
           \DB::raw('SUM(count) as total')
         );
         $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('month', 'year')->get();
+        return $stat->get();
     }
 
     public function ProdukTerlaris(Request $request){
@@ -131,26 +131,22 @@ class DashboardController extends Controller
         $stat =  salesTransaction::select( 
           \DB::raw('COUNT(product_id) as total'),
           'product_id'
-        )->with('product.unitUsaha');
+        )->with('product');
         $stat = $this->filterLocation($stat, $data);
         $stat = $this->filterUnit($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('month', 'year')->get();
+        return $stat->groupBy('product_id')->get();
     }
 
     public function totalStok(Request $request){
         $data = $request->all();
-        $from = date($data['from']);
-        $to = date($data['to']);
         
         $stat =  Product::select( 
           \DB::raw('SUM(productStock) as total'),
           'unit_usaha_id'
-        )->with(['product.unitUsaha']);
-        $stat = $this->filterLocation($stat, $data);
+        )->with(['unitUsaha']);
         $stat = $this->filterUnit($stat, $data);
-        $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('month', 'year')->get();
+        return $stat->groupBy('unit_usaha_id')->get();
     }
 
     public function pelangganStat(Request $request){
@@ -160,8 +156,7 @@ class DashboardController extends Controller
 
         $stat = salesTransaction::distinct();
         $stat = $this->filterLocation($stat, $data);
-        $stat = $this->filterUnit($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('month', 'year')->get();
+        return $stat->count('client_id');
   }
 }
