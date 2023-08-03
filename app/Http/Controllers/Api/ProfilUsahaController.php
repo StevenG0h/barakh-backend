@@ -12,7 +12,7 @@ class ProfilUsahaController extends Controller
 {
     public function index()
     {
-        $profilUsaha = UnitUsaha::with(['profil.profilUsahaImages'])->get();
+        $profilUsaha = UnitUsaha::with(['profil.profilUsahaImages'])->paginate(25);
         return response([
             "data"=>$profilUsaha
         ],200);

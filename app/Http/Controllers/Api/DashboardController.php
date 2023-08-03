@@ -314,7 +314,7 @@ class DashboardController extends Controller
               \DB::raw('COUNT(product_id) as total'),
               'product_id'
             )->with('product.unitUsaha')->whereRelation($location,'id',$locationId)
-            ->whereBetween('created_at',[$from,$$date])
+            ->whereBetween('created_at',[$from,$date])
             ->groupBy('product_id')->get();
             return $stat;
           } else if (!$to==''){

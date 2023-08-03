@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function index(){
-        $user = User::with('admins')->get();
+        $user = User::with('admins')->paginate(25);
         return response($user,200);
     }
 

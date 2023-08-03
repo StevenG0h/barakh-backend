@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\salesTransaction;
+use App\Models\SpendingTransaction;
 use App\Models\Transaction;
 use App\Services\TransactionService;
 use Illuminate\Http\Request;
@@ -37,6 +39,21 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->where('transactionType','PENJUALAN')->paginate(50);
         return response($transaction,200);
+    }
+    
+    public function showStat(Request $request)
+    {
+        $data = $request->all();
+        $from = date($data['from']);
+        $to = date($data['to']);
+        $stat['penjualan'] =  salesTransaction::select( 
+            \DB::raw('SUM(productPrice * productCount) as total'), 
+          ) ->whereBetween('created_at',[$from,$to])->first();
+        $stat['pengeluaran'] =  SpendingTransaction::select( 
+            \DB::raw('SUM(spendingValue) as total'), 
+          )
+          ->whereBetween('created_at',[$from,$to])->first();
+        return response($stat,200);
     }
 
 }

@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::get('/',[UnitUsahaController::class, 'index']);
             Route::delete('/{id}',[UnitUsahaController::class, 'destroy']);
             Route::get('/{id}',[UnitUsahaController::class, 'show']);
+            
         });
 
         Route::post('/register',[AuthController::class,'register']);
@@ -138,6 +139,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::delete('/{id}',[TransactionController::class, 'destroy']);
             Route::get('/show/{id}',[TransactionController::class, 'show']);
             Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
+            Route::post('/pencatatan',[TransactionController::class, 'showStat']);
         });
         
         Route::prefix('testimoni')->group(function(){
@@ -167,7 +169,9 @@ Route::prefix('profil')->group(function(){
     Route::get('/{id}',[ProfilUsahaController::class, 'show']);
 });
 
+
 Route::prefix('unit-usaha')->group(function(){
+    Route::get('/product-option/{id}',[UnitUsahaController::class, 'showProductOption']);
     Route::post('/{id}',[UnitUsahaController::class, 'update']);
     Route::post('/',[UnitUsahaController::class, 'store']);
     Route::get('/',[UnitUsahaController::class, 'index']);
@@ -191,6 +195,7 @@ Route::prefix('transaksi')->group(function(){
     Route::delete('/{id}',[TransactionController::class, 'destroy']);
     Route::get('/show/{id}',[TransactionController::class, 'show']);
     Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
+    Route::get('/penjualanWithFilter',[TransactionController::class, 'showPenjualanWithFilter']);
 });
 
 Route::prefix('provinsi')->group(function(){

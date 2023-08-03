@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\UnitUsaha;
 use App\Services\UnitUsahaService;
 use Illuminate\Http\Request;
@@ -32,8 +33,17 @@ class UnitUsahaController extends Controller
 
     public function show(string $id)
     {
-        $provinsi = UnitUsaha::where('id',$id)->with(['products.productImages'])->first();
-        return response($provinsi,200);
+        $unitUsaha = UnitUsaha::findOrFail($id);
+        $product = Product::where('unit_usaha_id',$id)->with('productImages')->paginate(25);
+        $data['unitUsaha'] = $unitUsaha;
+        $data['product'] = $product;
+        return response($data,200);
+    }
+    
+    public function showProductOption(string $id)
+    {
+        $unitUsaha = Product::where('unit_usaha_id',$id)->get();
+        return response($unitUsaha,200);
     }
 
     public function update(Request $request, string $id, UnitUsahaService $service)
