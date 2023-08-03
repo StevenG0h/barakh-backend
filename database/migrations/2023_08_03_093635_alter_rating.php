@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ratings', function (Blueprint $table) {
-            $table->id();
+        Schema::table('ratings', function (Blueprint $table) {
+        
+            $table->dropColumn('count');
             $table->double('rating');
-            $table->timestamps();
+
         });
     }
 
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ratings');
-    }
+        //
+    }x
 };
