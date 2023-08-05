@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {        
-        Schema::table('admins',function(Blueprint $table){
+        // Schema::table('admins',function(Blueprint $table){
             
-            $table->unsignedBigInteger('unit_usaha_id')->default(1);
+        //     $table->unsignedBigInteger('unit_usaha_id')->default(1);
             
-            $table->foreign('unit_usaha_id')->references('id')->on('unit_usahas');
-        });
+        //     $table->foreign('unit_usaha_id')->references('id')->on('unit_usahas');
+        // });
     }
 
     /**

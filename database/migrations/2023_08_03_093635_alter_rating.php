@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::table('ratings', function (Blueprint $table) {
         
-            $table->dropColumn('count');
-            $table->double('rating');
+            $table->unsignedBigInteger('product_id');
+
+            $table->foreign('product_id')->references('id')->on('products');
 
         });
     }
@@ -25,5 +26,5 @@ return new class extends Migration
     public function down(): void
     {
         //
-    }x
+    }
 };

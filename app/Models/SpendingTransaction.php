@@ -10,7 +10,6 @@ class SpendingTransaction extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-
     public function unitUsaha(){
         return $this->belongsTo(UnitUsaha::class);
     }

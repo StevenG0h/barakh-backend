@@ -80,7 +80,9 @@ use Termwind\Components\Raw;
         public function addRating($id, Array $data):rating{
             $product = Product::findOrFail($id);
             $rating = new rating();
-            $rating::create($data);
+            $rating->product_id = $id;
+            $rating->rating = $data['rating'];
+            $rating->save();
             return $rating;
         }
     }

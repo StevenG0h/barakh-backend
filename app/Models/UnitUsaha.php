@@ -20,4 +20,8 @@ class UnitUsaha extends Model
     public function profil():HasOne{
         return $this->hasOne(ProfilUsaha::class);
     }
+
+    public function admin():HasOne{
+        return $this->HasOne(Admin::class);
+    }
 }

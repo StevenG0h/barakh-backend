@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DashboardController;
@@ -156,6 +157,13 @@ Route::middleware(['auth:sanctum'])->group(function (){
 Route::get('/unit-usahas/options',[UnitUsahaController::class, 'getOptions']);
 Route::post('/login',[AuthController::class,'login']);
 
+Route::prefix('/galeri')->group(function(){
+    Route::get('/',[GaleriController::class,'clientGaleri']);
+});
+
+Route::prefix('testimoni')->group(function(){
+    Route::get('/',[TestimonyController::class, 'index']);
+});
 Route::prefix('client')->group(function(){
     Route::post('/{id}',[ClientController::class, 'update']);
     Route::post('/',[ClientController::class, 'store']);
@@ -245,4 +253,8 @@ Route::prefix('dashboard')->group(function(){
 
 Route::prefix('visitor')->group(function(){
     Route::get('/',[VisitorController::class,'index']);
+});
+
+Route::prefix('admin')->group(function(){
+    Route::get('/get-number',[AdminController::class,'getNumber']);
 });

@@ -23,6 +23,9 @@ use App\Models\Transaction;
                     $produk = Product::findOrFail($formatted[$i]['product_id']);
                     $produk->productStock = $produk->productStock - $formatted[$i]['productCount'];
                     $produk->save();
+                    if($i == 0){
+                        $transaction['adminNumber'] = $produk->with('unitUsaha.admin')->first();
+                    }
                 }
                 return $transaction;
             }else if($type == "PEMASUKANLAIN"){

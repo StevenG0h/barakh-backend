@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -13,6 +14,12 @@ class AdminController extends Controller
     public function index()
     {
         //
+    }
+    
+    public function getNumber()
+    {
+        $admin = Admin::inRandomOrder()->first();
+        return $admin;
     }
 
     /**

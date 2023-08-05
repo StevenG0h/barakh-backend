@@ -16,6 +16,13 @@ class GaleriController extends Controller
             "data"=>$galeri
         ],200);
     }
+    
+    public function clientGaleri(){
+        $galeri = galeri::all();
+        return response([
+            "data"=>$galeri
+        ],200);
+    }
 
     public function store(Request $request, GaleriService $service){
         $galeri = $service->createGaleri($request->all(), $request->file());

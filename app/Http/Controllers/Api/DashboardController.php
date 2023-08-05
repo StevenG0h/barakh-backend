@@ -78,6 +78,14 @@ class DashboardController extends Controller
         return $transaction;
       }
     }
+    
+    public function filterUnitDirect($transaction, $data){
+      if(isset($data['unitUsaha'])){
+        return $transaction->whereRelation('unitUsaha','id',$data['unitUsaha']);
+      }else{
+        return $transaction;
+      }
+    }
 
     public function penjualanStat(Request $request){
         $data = $request->all();
@@ -106,7 +114,7 @@ class DashboardController extends Controller
           \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
           \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
         );
-        $stat = $this->filterUnit($stat, $data);
+        $stat = $this->filterUnitDirect($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
         return $stat->groupBy('month', 'year')->get();
     }
@@ -145,7 +153,7 @@ class DashboardController extends Controller
           \DB::raw('SUM(productStock) as total'),
           'unit_usaha_id'
         )->with(['unitUsaha']);
-        $stat = $this->filterUnit($stat, $data);
+        $stat = $this->filterUnitDirect($stat, $data);
         return $stat->groupBy('unit_usaha_id')->get();
     }
 

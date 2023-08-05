@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $provinsi = Product::with(['productImages','unitUsaha'])->paginate(25);
+        $provinsi = Product::with(['productImages','unitUsaha','rating'])->paginate(25);
         return response([
             "data"=>$provinsi
         ],200);
@@ -39,7 +39,7 @@ class ProductController extends Controller
     
     public function showWithFilter(string $id)
     {
-        $provinsi = Product::with(['productImages','unitUsaha'])->where('unit_usaha_id',$id)->paginate(25);
+        $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('unit_usaha_id',$id)->paginate(25);
         return response($provinsi,200);
     }
 
