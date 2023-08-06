@@ -13,7 +13,7 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan','spending.unitUsaha'])->orderBy('updated_at','desc')->paginate(50);
+        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan','spending.unitUsaha'])->where('transactionStatus','!=','BELUMTERVERIFIKASI')->orderBy('updated_at','desc')->paginate(50);
         return response([
             "data"=>$transaction
         ],200);
@@ -38,6 +38,12 @@ class TransactionController extends Controller
     public function showPenjualan()
     {
         $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->where('transactionType','PENJUALAN')->paginate(50);
+        return response($transaction,200);
+    }
+
+    public function showPenjualanWithFilter(String $filter)
+    {
+        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->where('transactionType','PENJUALAN')->where('transactionStatus',$filter)->paginate(50);
         return response($transaction,200);
     }
     

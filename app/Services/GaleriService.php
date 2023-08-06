@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
             return $galeri;
         }
 
-        public function updateGaleri($id,Array $data, $file): Galeri{
+        public function updateGaleri($id,Array $data, $file): galeri{
             $validation =  $this->UpdateGaleriValidator($data)->validate();
             $galeri = Galeri::findOrFail($id);
             if(gettype($validation['path']) != 'string'){
@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Storage;
                 }catch(Exception $e){
 
                 }
-                $storage = Storage::putFileAs('public/galeri/', $validation['path'], $validation['galeriTitle'].'.'.$file->getClientOriginalExtension());
-                $validation['path'] = $validation['galeriTitle'].'.'.$file->getClientOriginalExtension();
+                $storage = Storage::putFileAs('public/galeri/', $validation['path'], $validation['galeriTitle'].'.'.$file['path']->getClientOriginalExtension());
+                $validation['path'] = $validation['galeriTitle'].'.'.$file['path']->getClientOriginalExtension();
             }
             $galeri->update($validation);
             return $galeri;

@@ -37,6 +37,7 @@ use App\Models\Transaction;
                 return $transaction;
             }else if($type == "PENGELUARAN"){
                 $validation = $this->CreateSpendingTransaction($data)->validate();
+                $validation['transactionStatus'] = 'TERVERIFIKASI';
                 $transaction = Transaction::create($validation);
                 $spendingData = $validation;
                 $spendingData['transaction_id'] = $transaction->id;

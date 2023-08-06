@@ -20,7 +20,7 @@ class ProfilUsahaController extends Controller
 
     public function store(Request $request, ProfilUsahaService $service){
         $profilUsaha = $service->createProfilUsaha($request->all());
-        return response($request, 201);
+        return response($profilUsaha, 201);
     }
 
     public function show(string $id)

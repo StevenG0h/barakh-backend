@@ -4,32 +4,39 @@
 use App\Http\Traits\ProfilUsahaTrait;
 use App\Models\ProfilUsaha;
 use App\Models\ProfilUsahaImages;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
     class ProfilUsahaService{
         use ProfilUsahaTrait;
 
         public function createProfilUsaha(Array $data){
-            $validation =  $this->CreateProfilValidator($data)->validate();
-            $profil = ProfilUsaha::create($validation);
-            Storage::makeDirectory('public/profil/'.$profil->id);
-            for($i=0; $i<count($validation['profilUsahaImages']); $i++){
-                $profilImageData = [
-                    'profil_usaha_id'=> $profil->id,
-                    'order'=>$i,
-                    'path'=>$profil->id."/".$validation['profilUsahaImages'][$i]->getClientOriginalName(),
-                ];
-                $profilImage = ProfilUsahaImages::create($profilImageData);
-                Storage::putFileAs('public/profil/'.$profil->id, $validation['profilUsahaImages'][$i], $validation['profilUsahaImages'][$i]->getClientOriginalName());
+            DB::beginTransaction();
+            try{
+                $validation =  $this->CreateProfilValidator($data)->validate();
+                $profil = ProfilUsaha::create($validation);
+                Storage::makeDirectory('public/profil/'.$profil->id);
+                for($i=0; $i<count($validation['profilUsahaImageFiltered']); $i++){
+                    $profilImageData = [
+                        'profil_usaha_id'=> $profil->id,
+                        'order'=>$i,
+                        'path'=>$profil->id."/".$validation['profilUsahaImageFiltered'][$i]->getClientOriginalName(),
+                    ];
+                    $profilImage = ProfilUsahaImages::create($profilImageData);
+                    Storage::putFileAs('public/profil/'.$profil->id, $validation['profilUsahaImageFiltered'][$i], $validation['profilUsahaImageFiltered'][$i]->getClientOriginalName());
+                    
+                }
+                DB::commit();
+                return $profil;
+            }catch(Exception $e){
                 
+                DB::rollBack();
+                return $e;
             }
-            return $data;
         }
 
         public function updateProfilUsaha($id,Array $data){
-            if(!isset($data['id'])){
-                return $this->createProfilUsaha($data);
-            }
             $validation =  $this->UpdateProfilValidator($data)->validate();
             $profil = ProfilUsaha::findOrFail($id);
             $profil->update($validation);
@@ -63,7 +70,12 @@ use Illuminate\Support\Facades\Storage;
                     }
                 }
             }
-            return $data;
+            $ordering = ProfilUsahaImages::where('profil_usaha_id',$id)->orderBy('order','asc')->get();
+            for($i = 0; $i<count($ordering);$i++){
+                $ordering[$i]->order = $i;
+                $ordering[$i]->save();
+            }
+            return $validation;
         }
 
         public function deleteProfilUsaha($id): ProfilUsaha{

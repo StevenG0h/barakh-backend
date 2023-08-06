@@ -63,6 +63,11 @@ use Termwind\Components\Raw;
                     }
                 }
             }
+            $ordering = ProductImg::where('product_id',$id)->orderBy('order','asc')->get();
+            for($i = 0; $i<count($ordering);$i++){
+                $ordering[$i]->order = $i;
+                $ordering[$i]->save();
+            }
             return $data;
         }
 

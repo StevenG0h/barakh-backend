@@ -17,6 +17,14 @@ class ProductController extends Controller
         ],200);
     }
     
+    public function home()
+    {
+        $provinsi = Product::with(['productImages'])->orderBy('created_at','desc')->paginate(3);
+        return response([
+            "data"=>$provinsi
+        ],200);
+    }
+    
     public function getCart(Request $request)
     {
         $data = $request->all();
@@ -33,7 +41,7 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $provinsi = Product::where('id',$id)->with(['unitUsaha','productImages'])->first();
+        $provinsi = Product::where('id',$id)->with(['unitUsaha','productImages','rating'])->first();
         return response($provinsi,200);
     }
     

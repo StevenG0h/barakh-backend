@@ -64,7 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
             
         });
 
-        Route::post('/register',[AuthController::class,'register']);
+        
         Route::get('/logout',function(Request $request){
             return $request->user()->currentAccessToken()->delete();
         });
@@ -141,6 +141,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::delete('/{id}',[TransactionController::class, 'destroy']);
             Route::get('/show/{id}',[TransactionController::class, 'show']);
             Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
+            Route::get('/penjualan/{filter}',[TransactionController::class, 'showPenjualanWithFilter']);
             Route::post('/pencatatan',[TransactionController::class, 'showStat']);
         });
         
@@ -157,13 +158,19 @@ Route::middleware(['auth:sanctum'])->group(function (){
 Route::get('/unit-usahas/options',[UnitUsahaController::class, 'getOptions']);
 Route::post('/login',[AuthController::class,'login']);
 
-Route::prefix('/galeri')->group(function(){
-    Route::get('/',[GaleriController::class,'clientGaleri']);
-});
-
 Route::prefix('testimoni')->group(function(){
     Route::get('/',[TestimonyController::class, 'index']);
 });
+
+Route::post('/register',[AuthController::class,'register']);
+
+Route::prefix('/galeri')->group(function(){
+    Route::get('/',[GaleriController::class,'index']);
+    Route::post('/',[GaleriController::class,'store']);
+    Route::post('/edit/{id}',[GaleriController::class,'edit']);
+    Route::delete('/{id}',[GaleriController::class,'destroy']);
+});
+
 Route::prefix('client')->group(function(){
     Route::post('/{id}',[ClientController::class, 'update']);
     Route::post('/',[ClientController::class, 'store']);
@@ -193,6 +200,7 @@ Route::prefix('produk')->group(function(){
     Route::put('/rating/{id}',[RatingController::class, 'store']);
     Route::post('/get-cart',[ProductController::class, 'getCart']);
     Route::get('/',[ProductController::class, 'index']);
+    Route::get('/home',[ProductController::class, 'home']);
     Route::delete('/{id}',[ProductController::class, 'destroy']);
     Route::get('/{id}',[ProductController::class, 'show']);
     Route::get('/withFilter/{id}',[ProductController::class, 'showWithFilter']);
@@ -251,10 +259,9 @@ Route::prefix('dashboard')->group(function(){
     Route::post('/',[DashboardController::class,'index']);
 });
 
+    Route::get('/get-number',[AdminController::class,'getNumber']);
+
+
 Route::prefix('visitor')->group(function(){
     Route::get('/',[VisitorController::class,'index']);
-});
-
-Route::prefix('admin')->group(function(){
-    Route::get('/get-number',[AdminController::class,'getNumber']);
 });

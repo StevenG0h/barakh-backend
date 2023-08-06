@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('ratings', function (Blueprint $table) {
-        
-            $table->unsignedBigInteger('product_id');
 
-            $table->foreign('product_id')->references('id')->on('products');
-
+        Schema::table('unit_usahas',function(Blueprint $table){
+            $table->smallInteger('isActice')->default(1);
         });
+    
     }
 
     /**

@@ -12,7 +12,7 @@ class UnitUsahaController extends Controller
 {
     public function index()
     {
-        $provinsi = UnitUsaha::with('products')->paginate('25');
+        $provinsi = UnitUsaha::with('products')->where('isActive','=',1)->paginate('25');
         return response([
             "data"=>$provinsi
         ],200);
@@ -20,7 +20,7 @@ class UnitUsahaController extends Controller
     
     public function getOptions()
     {
-        $provinsi = UnitUsaha::get();
+        $provinsi = UnitUsaha::where('isActive',1)->get();
         return response([
             "data"=>$provinsi
         ],200);
@@ -42,7 +42,7 @@ class UnitUsahaController extends Controller
     
     public function showProductOption(string $id)
     {
-        $unitUsaha = Product::where('unit_usaha_id',$id)->get();
+        $unitUsaha = Product::where('unit_usaha_id',$id)->where('isActive',1)->get();
         return response($unitUsaha,200);
     }
 
