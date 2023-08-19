@@ -12,25 +12,30 @@ use Illuminate\Support\Facades\Storage;
     class UnitUsahaService{
         use UnitUsahaTrait;
 
-        public function createUnitUsaha(Array $data, $file):UnitUsaha{
+        public function createUnitUsaha(Array $data, $file, $logo){
             DB::beginTransaction();
             try{
+                $unitUsahaLength= UnitUsaha::get();
                 $pegawai = new UserService();
                 $validation =  $this->createUnitUsahaValidator($data)->validate();
                 $adminValidation = $pegawai->CreateAdminValidator($data)->validate();
                 $storage = Storage::putFileAs('public/unitUsaha/', $validation['usahaImage'], $validation['usahaName'].'.'.$file->getClientOriginalExtension());
+                $storage = Storage::putFileAs('public/unitUsaha/logo/', $validation['unitUsahaLogo'], $validation['usahaName'].'.'.$file->getClientOriginalExtension());
                 $validation['usahaImage'] = $validation['usahaName'].'.'.$file->getClientOriginalExtension();
+                $validation['unitUsahaLogo'] = $validation['usahaName'].'logo'.'.'.$logo->getClientOriginalExtension();
                 $unitUsaha = UnitUsaha::create($validation);
                 $data['unit_usaha_id'] = $unitUsaha->id;
+                $data['orders'] = count($unitUsahaLength);
                 $pegawai->createUser($data);
                 DB::commit();
                 return $unitUsaha;
             }catch(Exception $e){
                 DB::rollBack();
+                return $e;
             }
         }
 
-        public function updateUnitUsaha($id,Array $data, $file):UnitUsaha{
+        public function updateUnitUsaha($id,Array $data, $file, $logo):UnitUsaha{
             $validation =  $this->UpdateUnitUsahaValidator($data)->validate();
             $unitUsaha = UnitUsaha::findOrFail($id);
             if(gettype($validation['usahaImage']) != 'string'){
@@ -41,6 +46,15 @@ use Illuminate\Support\Facades\Storage;
                 }
                 $storage = Storage::putFileAs('public/unitUsaha/', $validation['usahaImage'], $validation['usahaName'].'.'.$file->getClientOriginalExtension());
                 $validation['usahaImage'] = $validation['usahaName'].'.'.$file->getClientOriginalExtension();
+            }
+            if(gettype($validation['unitUsahaLogo']) != 'string'){
+                try{
+                    Storage::delete('public/unitUsaha/logo/'.$unitUsaha->unitUsahaLogo);
+                }catch(Exception $e){
+
+                }
+                $storage = Storage::putFileAs('public/unitUsaha/logo/', $validation['unitUsahaLogo'], $validation['usahaName'].'logo'.'.'.$logo->getClientOriginalExtension());
+                $validation['unitUsahaLogo'] = $validation['usahaName'].'logo.'.$logo->getClientOriginalExtension();
             }
             $unitUsaha->update($validation);
             return $unitUsaha;

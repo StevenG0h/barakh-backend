@@ -23,13 +23,15 @@ class DashboardController extends Controller
       $pelangganStat = $this->pelangganStat($request);
       $pengeluaran = $this->pengeluaran($request);
       $visitor =$this->visitor($request);
+      $pelangganDetail =$this->pelangganDetails($request);
       return response([
       'penjualan'=>$penjualan,
       'produkTerlaris'=>$ProdukTerlaris,
       'totalStok'=>$totalStok,
       'pelangganStat'=>$pelangganStat,
       'pengeluaran'=>$pengeluaran,
-      'visitor'=>$visitor
+      'visitor'=>$visitor,
+      'pelangganDetail'=>$pelangganDetail
       ],200);
     }
 
@@ -166,5 +168,35 @@ class DashboardController extends Controller
         $stat = $this->filterLocation($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
         return $stat->count('client_id');
+  }
+  
+  public function pelangganDetails(Request $request){
+    $data = $request->all();
+    $from = date($data['from']);
+    $to = date($data['to']);
+
+    if(isset($data['kelurahan'])) {
+      $stat = salesTransaction::select(
+        \DB::raw('COUNT(DISTINCT client_id) as total')
+      );
+      $stat = $this->filterLocation($stat, $data);
+      $stat = $this->filterUnit($stat, $data);
+      $stat = $this->filterDate($stat, $from, $to);
+      return $stat->groupBy('client_id')->paginate(25);
+    } else {
+      $stat = salesTransaction::select(
+        \DB::raw('COUNT(DISTINCT client_id) as total')
+      );
+      $stat = $this->filterLocation($stat, $data);
+      $stat = $this->filterUnit($stat, $data);
+      $stat = $this->filterDate($stat, $from, $to);
+      if(!empty($data['kecamatan'])){
+        return $stat->groupBy($data('kecamatan'))->paginate(25);
+      }else if(!empty($data['kota'])){
+        return $stat->groupBy($data('kota'))->paginate(25);
+      }else if(!empty($data['provinsi'])){
+        return $stat->groupBy($data('provinsi'))->paginate(25);
+      }
+    }
   }
 }

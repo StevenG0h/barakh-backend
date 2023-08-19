@@ -12,7 +12,7 @@ class UnitUsahaController extends Controller
 {
     public function index()
     {
-        $provinsi = UnitUsaha::with('products')->where('isActive','=',1)->paginate('25');
+        $provinsi = UnitUsaha::with('products')->where('isActive','=',1)->orderBy('orders','asc')->paginate('25');
         return response([
             "data"=>$provinsi
         ],200);
@@ -20,14 +20,14 @@ class UnitUsahaController extends Controller
     
     public function getOptions()
     {
-        $provinsi = UnitUsaha::where('isActive',1)->get();
+        $provinsi = UnitUsaha::where('isActive',1)->orderBy('orders','asc')->get();
         return response([
             "data"=>$provinsi
         ],200);
     }
 
     public function store(Request $request, UnitUsahaService $service){
-        $provinsi = $service->createUnitUsaha($request->all(), $request->usahaImage);
+        $provinsi = $service->createUnitUsaha($request->all(), $request->usahaImage, $request->unitUsahaLogo);
         return response($provinsi, 201);
     }
 
@@ -48,7 +48,7 @@ class UnitUsahaController extends Controller
 
     public function update(Request $request, string $id, UnitUsahaService $service)
     {
-        $provinsi = $service->updateUnitUsaha($id,$request->all(),$request->usahaImage);
+        $provinsi = $service->updateUnitUsaha($id,$request->all(),$request->usahaImage,$request->unitUsahaLogo);
         return $provinsi;
     }
 

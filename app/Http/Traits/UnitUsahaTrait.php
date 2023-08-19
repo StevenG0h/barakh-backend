@@ -8,7 +8,8 @@ use Illuminate\Validation\Rules\File;
             $validator = Validator::make($data,[
                 'usahaName'=>'required',
                 'usahaDesc'=>'required',
-                'usahaImage'=>['required',File::image()]
+                'usahaImage'=>['required',File::image()],
+                'unitUsahaLogo'=>['required',File::image()],
             ]);
             return $validator;
         }
@@ -17,7 +18,9 @@ use Illuminate\Validation\Rules\File;
             $validator = Validator::make($data,[
                 'usahaName'=>'sometimes',
                 'usahaDesc'=>'sometimes',
-                'usahaImage'=>['sometimes']
+                'usahaImage'=>['sometimes'],
+                'unitUsahaLogo'=>['sometimes'],
+                'orders'=>'sometimes'
             ]);
             return $validator;
         }
