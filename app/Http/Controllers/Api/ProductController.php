@@ -45,6 +45,22 @@ class ProductController extends Controller
         return response($provinsi,200);
     }
     
+    public function searchWithFilter(Request $request)
+    {   
+        $product = Product::with(['productImages','unitUsaha','rating']);
+        if($request->id != 'all'){
+            $product = $product->where('unit_usaha_id',$request->id);
+        }
+        if($request->keyword != ''){
+            $product = $product->where('productName','%Like%',$request->keyword);
+        }
+        if($request->harga != ''){
+            $product = $product->orderBy('productPrice',$request->harga);
+        }
+        $product = $product->orderBy('created_at',$request->orderBy)->paginate(25);
+        return response($product,200);
+    }
+    
     public function showWithFilter(string $id)
     {
         $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('unit_usaha_id',$id)->paginate(25);

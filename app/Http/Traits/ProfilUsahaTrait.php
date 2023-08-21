@@ -7,7 +7,7 @@
             $validator = Validator::make($data,[
                 'unit_usaha_id'=>'required',
                 'profil_usaha_desc'=>'required',
-                'profilUsahaImageFiltered.*'=>'required|image',
+                // 'profilUsahaImageFiltered.*'=>'required|image',
             ]);
             return $validator;
         }
@@ -15,8 +15,8 @@
         public function UpdateProfilValidator(Array $data){
             $validator = Validator::make($data,[
                 'profil_usaha_desc'=>'sometimes',
-                'profilUsahaImages.*'=>'sometimes',
-                'deletedImage'=>'sometimes'
+                // 'profilUsahaImages.*'=>'sometimes',
+                // 'deletedImage'=>'sometimes'
             ]);
             return $validator;
         }

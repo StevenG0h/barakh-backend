@@ -16,17 +16,17 @@ use Illuminate\Support\Facades\Storage;
             try{
                 $validation =  $this->CreateProfilValidator($data)->validate();
                 $profil = ProfilUsaha::create($validation);
-                Storage::makeDirectory('public/profil/'.$profil->id);
-                for($i=0; $i<count($validation['profilUsahaImageFiltered']); $i++){
-                    $profilImageData = [
-                        'profil_usaha_id'=> $profil->id,
-                        'order'=>$i,
-                        'path'=>$profil->id."/".$validation['profilUsahaImageFiltered'][$i]->getClientOriginalName(),
-                    ];
-                    $profilImage = ProfilUsahaImages::create($profilImageData);
-                    Storage::putFileAs('public/profil/'.$profil->id, $validation['profilUsahaImageFiltered'][$i], $validation['profilUsahaImageFiltered'][$i]->getClientOriginalName());
+                // Storage::makeDirectory('public/profil/'.$profil->id);
+                // for($i=0; $i<count($validation['profilUsahaImageFiltered']); $i++){
+                //     $profilImageData = [
+                //         'profil_usaha_id'=> $profil->id,
+                //         'order'=>$i,
+                //         'path'=>$profil->id."/".$validation['profilUsahaImageFiltered'][$i]->getClientOriginalName(),
+                //     ];
+                //     $profilImage = ProfilUsahaImages::create($profilImageData);
+                //     Storage::putFileAs('public/profil/'.$profil->id, $validation['profilUsahaImageFiltered'][$i], $validation['profilUsahaImageFiltered'][$i]->getClientOriginalName());
                     
-                }
+                // }
                 DB::commit();
                 return $profil;
             }catch(Exception $e){

@@ -9,6 +9,7 @@ use App\Models\Client as ModelsClient;
 use App\Models\salesTransaction;
 use App\Models\SpendingTransaction;
 use App\Models\Visitor;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,30 @@ class DashboardController extends Controller
       'visitor'=>$visitor,
       'pelangganDetail'=>$pelangganDetail
       ],200);
+    }
+
+    public function filterLocationPelangganDetail($transaction, $data){
+      $location = '';
+      $locationId ='';
+      if(!empty($data['kelurahan'])){
+        $location = 'kelurahan';
+        $locationId = $data['kelurahan'];
+      }else if(!empty($data['kecamatan'])){
+        $location = 'kelurahan.kecamatan';
+        $locationId = $data['kecamatan'];
+      }else if(!empty($data['kota'])){
+        $location = 'kelurahan.kecamatan.kota';
+        $locationId = $data['kota'];
+      } else if(!empty($data['provinsi'])){
+        $location = 'kelurahan.kecamatan.kota.provinsi';
+        $locationId = $data['provinsi'];
+      }
+
+      if($location == '' && $locationId == ''){
+        return $transaction;
+      }
+      $transaction = $transaction->whereRelation($location,'id',$locationId);
+      return $transaction;
     }
 
     public function filterLocation($transaction, $data){
@@ -175,28 +200,7 @@ class DashboardController extends Controller
     $from = date($data['from']);
     $to = date($data['to']);
 
-    if(isset($data['kelurahan'])) {
-      $stat = salesTransaction::select(
-        \DB::raw('COUNT(DISTINCT client_id) as total')
-      );
-      $stat = $this->filterLocation($stat, $data);
-      $stat = $this->filterUnit($stat, $data);
-      $stat = $this->filterDate($stat, $from, $to);
-      return $stat->groupBy('client_id')->paginate(25);
-    } else {
-      $stat = salesTransaction::select(
-        \DB::raw('COUNT(DISTINCT client_id) as total')
-      );
-      $stat = $this->filterLocation($stat, $data);
-      $stat = $this->filterUnit($stat, $data);
-      $stat = $this->filterDate($stat, $from, $to);
-      if(!empty($data['kecamatan'])){
-        return $stat->groupBy($data('kecamatan'))->paginate(25);
-      }else if(!empty($data['kota'])){
-        return $stat->groupBy($data('kota'))->paginate(25);
-      }else if(!empty($data['provinsi'])){
-        return $stat->groupBy($data('provinsi'))->paginate(25);
-      }
-    }
+    $detail = salesTransaction::select([DB::raw('SUM(productPrice * productCount) as Total'),'kota_id'])->where('provinsi_id',4)->groupBy('kota_id')->get();
+    return $detail;
   }
 }

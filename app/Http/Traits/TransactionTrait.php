@@ -29,6 +29,9 @@
         public function CreateTransactionValidator(Array $data){
             $validator = Validator::make($data,[
                 'transactionType'=>'required',
+                'provinsi_id'=>'required',
+                'kota_id'=>'required',
+                'kecamatan_id'=>'required',
                 'kelurahan_id'=>'required',
                 'client_id'=>'required',
                 'transactionAddress'=>'required',
@@ -43,6 +46,9 @@
             $salesTransaction = [];
             for($i=0; $i<count($data['product']);$i++){
                 $transaction['transaction_id']= $data['transaction_id'];
+                $transaction['provinsi_id']= $data['provinsi_id'];
+                $transaction['kota_id']= $data['kota_id'];
+                $transaction['kecamatan_id']= $data['kecamatan_id'];
                 $transaction['kelurahan_id']= $data['kelurahan_id'];
                 $transaction['client_id']= $data['client_id'];
                 $transaction['product_id'] = $data['product'][$i]['productData']['id'];

@@ -22,4 +22,16 @@ class salesTransaction extends Model
     public function kelurahan(){
         return $this->belongsTo(Kelurahan::class);
     }
+    
+    public function kecamatan(){
+        return $this->belongsTo(Kecamatan::class);
+    }
+    
+    public function kota(){
+        return $this->belongsTo(Kota::class);
+    }
+    
+    public function provinsi(){
+        return $this->belongsTo(Provinsi::class);
+    }
 }

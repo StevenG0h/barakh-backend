@@ -204,6 +204,7 @@ Route::prefix('produk')->group(function(){
     Route::delete('/{id}',[ProductController::class, 'destroy']);
     Route::get('/{id}',[ProductController::class, 'show']);
     Route::get('/withFilter/{id}',[ProductController::class, 'showWithFilter']);
+    Route::post('/search',[ProductController::class, 'searchWithFilter']);
 });
 
 Route::prefix('transaksi')->group(function(){
