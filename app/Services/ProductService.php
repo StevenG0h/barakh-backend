@@ -78,7 +78,8 @@ use Termwind\Components\Raw;
                 Storage::delete('public/product/'.$productImage[$i]->path);
                 $productImage[$i]->delete();
             }
-            $product->delete();
+            $product->isActive= 0;
+            $product->save();
             return $product;
         }
         

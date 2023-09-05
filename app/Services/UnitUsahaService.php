@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Storage;
             DB::beginTransaction();
             try{
                 $unitUsahaLength= UnitUsaha::get();
-                $pegawai = new UserService();
                 $validation =  $this->createUnitUsahaValidator($data)->validate();
-                $adminValidation = $pegawai->CreateAdminValidator($data)->validate();
                 $storage = Storage::putFileAs('public/unitUsaha/', $validation['usahaImage'], $validation['usahaName'].'.'.$file->getClientOriginalExtension());
                 $storage = Storage::putFileAs('public/unitUsaha/logo/', $validation['unitUsahaLogo'], $validation['usahaName'].'.'.$file->getClientOriginalExtension());
                 $validation['usahaImage'] = $validation['usahaName'].'.'.$file->getClientOriginalExtension();
@@ -26,7 +24,6 @@ use Illuminate\Support\Facades\Storage;
                 $unitUsaha = UnitUsaha::create($validation);
                 $data['unit_usaha_id'] = $unitUsaha->id;
                 $data['orders'] = count($unitUsahaLength);
-                $pegawai->createUser($data);
                 DB::commit();
                 return $unitUsaha;
             }catch(Exception $e){

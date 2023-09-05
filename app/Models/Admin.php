@@ -13,4 +13,12 @@ class Admin extends Model
     protected $table = 'admins';
 
     protected $guarded= ['id'];
+
+    public function role(){
+        return $this->belongsTo(role::class);
+    }
+    
+    public function unitUsaha(){
+        return $this->belongsTo(UnitUsaha::class);
+    }
 }

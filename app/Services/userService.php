@@ -4,31 +4,37 @@
 use App\Http\Traits\AdminTrait;
 use App\Models\Admin;
 use App\Models\User;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
     class UserService{
         use AdminTrait;
 
         public function createUser(Array $data): User{
-            $validation =  $this->CreateAdminValidator($data)->validate();
-            $user = new User;
-            $admin = new Admin();
-            $user->email = $validation['email'];
-            $user->password = Hash::make($data['password']);
-            $user->save();
-            $admin->adminName = $validation['adminName'];
-            $admin->adminNum = $validation['adminNum'];
-            $admin->adminLevel = '0';
-            $admin->user_id = $user->id;
-            $admin->unit_usaha_id = $data['unit_usaha_id'];
-            $admin->save();
+                $user = new User;
+                $admin = new Admin();
+                $validation =  $this->CreateAdminValidator($data)->validate();
+                $user->email = $validation['email'];
+                $user->password = Hash::make($data['password']);
+                $user->save();
+                $admin->adminName = $validation['adminName'];
+                $admin->adminNum = $validation['adminNum'];
+                $admin->adminLevel = '0';
+                $admin->user_id = $user->id;
+                $admin->unit_usaha_id = $data['unit_usaha_id'];
+                $admin->role_id = $data['role_id'];
+                $admin->save();
+                
+                return $user;
             
-            return $user;
         }
-        public function updateUser($user,Array $data): User{
-            $user = User::findOrFail($user);
-            $validation =  $this->UpdateAdminValidator($data, $user)->validate();
+
+        public function updateUser($user,Array $data){
+            $user = User::find($user);
             $admin = Admin::where('user_id',$user->id)->firstOrFail();
+            $validation =  $this->UpdateAdminValidator($data, $user, $admin)->validate();
             if(!empty($validation['password'])){
                 $user->password = Hash::make($validation['password']);
             }
@@ -37,6 +43,8 @@ use Illuminate\Support\Facades\Hash;
 
             $admin->adminName = $validation['adminName'];
             $admin->adminNum = $validation['adminNum'];
+            $admin->unit_usaha_id = $data['unit_usaha_id'];
+            $admin->role_id = $data['role_id'];
             $admin->save();
             
             return $user;
@@ -45,8 +53,10 @@ use Illuminate\Support\Facades\Hash;
         public function destroy($user){
             $user = User::findOrFail($user);
             $admin = Admin::where('user_id',$user->id)->firstOrFail();
-            $admin->destroy($admin->id);
-            $user->destroy($user->id);
+            $admin->deleted_at = Carbon::now();
+            $admin->isActive=0;
+            $admin->save();
+            return true;
         }
     }
 ?>

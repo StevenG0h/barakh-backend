@@ -24,7 +24,9 @@ use App\Models\Transaction;
                     $produk->productStock = $produk->productStock - $formatted[$i]['productCount'];
                     $produk->save();
                     if($i == 0){
-                        $transaction['adminNumber'] = $produk->with('unitUsaha.admin')->first();
+                        $transaction['adminNumber'] = $produk->with(['unitUsaha.admin'=> function ($q) {
+                            $q->inRandomOrder();
+                        }])->whereRelation('unitUsaha.admin','adminLevel','=','0')->first();
                     }
                 }
                 return $transaction;

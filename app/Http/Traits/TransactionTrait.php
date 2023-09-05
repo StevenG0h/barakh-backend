@@ -36,6 +36,7 @@
                 'client_id'=>'required',
                 'transactionAddress'=>'required',
                 'product.*.productData.id'=>'required',
+                'product.*.productData.unit_usaha_id'=>'required',
                 'product.*.productData.productPrice'=>'required',
                 'product.*.item'=>'required'
             ]);
@@ -51,6 +52,7 @@
                 $transaction['kecamatan_id']= $data['kecamatan_id'];
                 $transaction['kelurahan_id']= $data['kelurahan_id'];
                 $transaction['client_id']= $data['client_id'];
+                $transaction['unit_usaha_id'] = $data['product'][$i]['productData']['unit_usaha_id'];
                 $transaction['product_id'] = $data['product'][$i]['productData']['id'];
                 $transaction['productCount'] = $data['product'][$i]['item'];
                 $transaction['productPrice'] = $data['product'][$i]['productData']['productPrice'];

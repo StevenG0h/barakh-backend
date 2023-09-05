@@ -11,8 +11,16 @@ class salesTransaction extends Model
 
     protected $guarded = ['id'];
 
+    public function transaksi(){
+        return $this->belongsTo(Transaction::class);
+    }
+
     public function product(){
         return $this->belongsTo(Product::class);
+    }
+   
+    public function unitUsaha(){
+        return $this->belongsTo(UnitUsaha::class);
     }
 
     public function client(){
