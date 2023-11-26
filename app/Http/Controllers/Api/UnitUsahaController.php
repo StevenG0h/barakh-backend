@@ -14,8 +14,8 @@ class UnitUsahaController extends Controller
     public function index(Request $request)
     {
         if($request->user() != null){
-            $user = Admin::where('user_id',$request->user()->id)->first();
-            if($user->adminLevel == 0){
+            $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
+            if($user->role->permission == 0){
                 $provinsi = UnitUsaha::where('id',$user->unit_usaha_id)->with('products')->where('isActive','=',1)->orderBy('orders','asc')->paginate('25');
                 return response([
                     "data"=>$provinsi
@@ -32,8 +32,8 @@ class UnitUsahaController extends Controller
     {
         
         if($request->user() != null){
-            $user = Admin::where('user_id',$request->user()->id)->first();
-            if($user->adminLevel == 0){
+            $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
+            if($user->role->permission == 0){
                 $provinsi = UnitUsaha::where('id',$user->unit_usaha_id)->where('isActive',1)->orderBy('orders','asc')->get();
                 return response([
                     "data"=>$provinsi

@@ -2,6 +2,7 @@
     namespace App\Services;
 
 use App\Http\Traits\TransactionTrait;
+use App\Models\Admin;
 use App\Models\IncomeTransaction;
 use App\Models\Product;
 use App\Models\salesTransaction;
@@ -24,9 +25,13 @@ use App\Models\Transaction;
                     $produk->productStock = $produk->productStock - $formatted[$i]['productCount'];
                     $produk->save();
                     if($i == 0){
-                        $transaction['adminNumber'] = $produk->with(['unitUsaha.admin'=> function ($q) {
+                        $phoneNumber = $produk->with(['unitUsaha.admin'=> function ($q) {
                             $q->inRandomOrder();
-                        }])->whereRelation('unitUsaha.admin','adminLevel','=','0')->first();
+                        }])->whereRelation('unitUsaha.admin','adminLevel','=','0')->get();
+                        if($phoneNumber->isEmpty()){
+                            $phoneNumber = Admin::where('adminLevel','=','1')->get();
+                        }
+                        $transaction['adminNumber'] = $phoneNumber->first();
                     }
                 }
                 return $transaction;
@@ -54,9 +59,17 @@ use App\Models\Transaction;
             $transaction->update($validation);
             return $transaction;
         }
+        
+        public function updateSpendingTransaction($id,Array $data): SpendingTransaction{
+            $validation =  $this->UpdateSpendingTransactionValidator($data)->validate();
+            $transaction = SpendingTransaction::findOrFail($id);
+            $transaction->update($validation);
+            return $transaction;
+        }
 
-        public function deleteTransaction($id): Transaction{
+        public function deleteSpendingTransaction($id): Transaction{
             $transaction = Transaction::findOrFail($id);
+            $transaction->spending()->delete();
             $transaction->delete();
             return $transaction;
         }

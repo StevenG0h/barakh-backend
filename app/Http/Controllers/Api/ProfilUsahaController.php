@@ -13,8 +13,8 @@ class ProfilUsahaController extends Controller
 {
     public function index(Request $request)
     {
-        $user = Admin::where('user_id',$request->user()->id)->first();
-        if($user->adminLevel == 0){
+        $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
+        if($user->role->permission == 0){
             $profilUsaha = UnitUsaha::where('id',$user->unit_usaha_id)->with(['profil.profilUsahaImages'])->paginate(25);
             return response([
                 "data"=>$profilUsaha

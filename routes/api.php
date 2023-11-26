@@ -41,12 +41,13 @@ Route::middleware(['auth:sanctum'])->group(function (){
 
         Route::post('/register',[AuthController::class,'register']);
         Route::get('/user',function(Request $request){
-            $user = Admin::where('user_id',$request->user()->id)->first();
+            $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
             return $user;
         });
 
         Route::prefix('dashboard')->group(function(){
             Route::post('/',[DashboardController::class,'index']);
+            Route::post('/download',[DashboardController::class,'downloadExcel']);
         });
 
         Route::prefix('/admin')->group(function(){
@@ -55,6 +56,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::get('/detail/{id}',[UserController::class,'show']);
             Route::put('/{id}',[UserController::class,'edit']);
             Route::delete('/{id}',[UserController::class,'destroy']);
+            Route::delete('/destroy/{id}',[UserController::class,'destroyPermanent']);
         });
 
         Route::prefix('/galeri')->group(function(){
@@ -144,15 +146,18 @@ Route::middleware(['auth:sanctum'])->group(function (){
         });
         
         Route::prefix('transaksi')->group(function(){
+            Route::put('/spending/{id}',[TransactionController::class, 'updateSpending']);
             Route::put('/{id}',[TransactionController::class, 'update']);
             Route::post('/',[TransactionController::class, 'store']);
             Route::get('/',[TransactionController::class, 'index']);
+            Route::post('/pencatatan-detail',[TransactionController::class, 'showPencatatanDetail']);
             Route::delete('/{id}',[TransactionController::class, 'destroy']);
             Route::get('/show/{id}',[TransactionController::class, 'show']);
             Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
             Route::get('/penjualan/{filter}',[TransactionController::class, 'showPenjualanWithFilter']);
             Route::post('/pencatatan',[TransactionController::class, 'showStat']);
             Route::post('/keuangan',[TransactionController::class, 'showKeuangan']);
+            Route::get('/year',[TransactionController::class, 'getYear']);
         });
         
         Route::prefix('testimoni')->group(function(){
@@ -224,6 +229,7 @@ Route::prefix('produk')->group(function(){
 
 Route::prefix('transaksi')->group(function(){
     Route::put('/{id}',[TransactionController::class, 'update']);
+    
     Route::post('/',[TransactionController::class, 'store']);
     Route::get('/',[TransactionController::class, 'index']);
     Route::delete('/{id}',[TransactionController::class, 'destroy']);
@@ -278,4 +284,5 @@ Route::prefix('kelurahan')->group(function(){
 
 Route::prefix('visitor')->group(function(){
     Route::get('/',[VisitorController::class,'index']);
+    Route::get('/counter', [VisitorController::class,'getVisitor']);
 });

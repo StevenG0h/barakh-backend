@@ -2,6 +2,7 @@
     namespace App\Services;
 
 use App\Http\Traits\UnitUsahaTrait;
+use App\Models\Product;
 use App\Models\UnitUsaha;
 use App\Services\UserService;
 use Exception;
@@ -59,6 +60,7 @@ use Illuminate\Support\Facades\Storage;
 
         public function deleteUnitUsaha($id): UnitUsaha{
             $unitUsaha = UnitUsaha::findOrFail($id);
+            Product::where('unit_usaha_id', $id)->update(['isActive'=>'0']);
             $unitUsaha->isActive = 0;
             $unitUsaha->save();
             return $unitUsaha;

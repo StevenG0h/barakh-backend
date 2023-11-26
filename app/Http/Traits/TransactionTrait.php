@@ -9,19 +9,21 @@
                 'unit_usaha_id'=>'required',
                 'SpendingName'=>'required',
                 'SpendingDescription'=>'required',
-                'SpendingValue'=>'required'
+                'SpendingValue'=>'required',
+                'create_time'=>'required'
             ]);
             return $validator;
         }
         
-        public function UpdateSpendingTransaction(Array $data){
+        public function UpdateSpendingTransactionValidator(Array $data){
             $validator = Validator::make($data,[
-                'transaction_id'=>'required',
+                'id'=>'required',
                 'transactionType'=>'sometimes',
                 'unit_usaha_id'=>'sometimes',
                 'SpendingName'=>'sometimes',
                 'SpendingDescription'=>'sometimes',
-                'SpendingValue'=>'sometimes'
+                'SpendingValue'=>'sometimes',
+                'create_time'=>'sometimes'
             ]);
             return $validator;
         }

@@ -10,23 +10,25 @@ use App\Models\Client as ModelsClient;
 use App\Models\salesTransaction;
 use App\Models\SpendingTransaction;
 use App\Models\Visitor;
+use App\Exports\DashboardExports;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
     public function index(Request $request){
       #return $request->all();
       if($request->user() != null){
-        $user = Admin::where('user_id',$request->user()->id)->first();
-        if($user->adminLevel == 0){
+        $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
+            if($user->role->permission == 0){
             $request['unitUsaha'] = $user->unit_usaha_id;
         }
         
       }
-      $penjualan = $this->penjualanStat($request);
+        $penjualan = $this->penjualanStat($request);
         $ProdukTerlaris = $this->ProdukTerlaris($request);
         $totalStok = $this->totalStok($request);
         $pelangganStat = $this->pelangganStat($request);
@@ -82,6 +84,11 @@ class DashboardController extends Controller
       }
 
       return $filtered;
+    }
+
+    public function downloadExcel(Request $request){
+      
+      return Excel::download(new DashboardExports($request), 'dashboard.xlsx');
     }
 
     public function filterLocation($transaction, $data){
@@ -174,7 +181,9 @@ class DashboardController extends Controller
         $stat = $this->filterLocation($stat, $data);
         $stat = $this->filterUnit($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('month', 'year')->get();
+        return $stat->whereRelation('transaction','transactionStatus','!=','BATAL')
+        ->whereRelation('transaction','transactionStatus','!=','BELUMTERVERIFIKASI')
+        ->groupBy('month', 'year')->get();
     }
     
     public function pengeluaran(Request $request){
@@ -216,7 +225,9 @@ class DashboardController extends Controller
         $stat = $this->filterLocation($stat, $data);
         $stat = $this->filterUnit($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('product_id')->get();
+        return $stat->whereRelation('transaction','transactionStatus','!=','BATAL')
+        ->whereRelation('transaction','transactionStatus','!=','BELUMTERVERIFIKASI')
+        ->groupBy('product_id')->get();
     }
 
     public function totalStok(Request $request){
@@ -237,7 +248,9 @@ class DashboardController extends Controller
         $stat = salesTransaction::distinct();
         $stat = $this->filterLocation($stat, $data);
         $stat = $this->filterDate($stat, $from, $to);
-        return $stat->count('client_id');
+        return $stat->whereRelation('transaction','transactionStatus','!=','BATAL')
+        ->whereRelation('transaction','transactionStatus','!=','BELUMTERVERIFIKASI')
+        ->count('client_id');
   }
   
   public function pelangganDetails(Request $request){
@@ -268,7 +281,7 @@ class DashboardController extends Controller
     ->join('products','sales_transactions.product_id', '=', 'products.id')
     ->join('unit_usahas','sales_transactions.unit_usaha_id', '=', 'unit_usahas.id')
     ->join('transactions','sales_transactions.transaction_id', '=', 'transactions.id')
-    ->whereRaw("transactions.transactionStatus != 'BELUMTERVERIFIKASI' AND sales_transactions.kelurahan_id = kelurahans.id AND sales_transactions.kecamatan_id = kecamatans.id AND sales_transactions.kota_id = kotas.id AND sales_transactions.provinsi_id = provinsis.id AND products.id = sales_transactions.product_id AND sales_transactions.unit_usaha_id = unit_usahas.id");
+    ->whereRaw("transactions.transactionStatus != 'BELUMTERVERIFIKASI' AND transactions.transactionStatus != 'BATAL' AND sales_transactions.kelurahan_id = kelurahans.id AND sales_transactions.kecamatan_id = kecamatans.id AND sales_transactions.kota_id = kotas.id AND sales_transactions.provinsi_id = provinsis.id AND products.id = sales_transactions.product_id AND sales_transactions.unit_usaha_id = unit_usahas.id");
     if($location['locationId'] != ''){
       $detail = $detail->where($location['location'],$location['locationId']);
     }

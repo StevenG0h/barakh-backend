@@ -11,7 +11,7 @@ class salesTransaction extends Model
 
     protected $guarded = ['id'];
 
-    public function transaksi(){
+    public function transaction(){
         return $this->belongsTo(Transaction::class);
     }
 

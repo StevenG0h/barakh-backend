@@ -22,4 +22,11 @@ class VisitorController extends Controller
         return response('',200);
 
     }
+    public function getVisitor(Request $request){
+        $data = $request->all();
+        $stat =  Visitor::select( 
+          \DB::raw('SUM(count) as total')
+        );
+        return response($stat->get(), 200);
+    }
 }

@@ -13,9 +13,9 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         if($request->user() != null){
-            $user = Admin::where('user_id',$request->user()->id)->first();
-            if($user->adminLevel == 0){
-                $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('isActive',1)->whereRelation('sales.product','unit_usaha_id','=',$user->unit_usaha_id)->paginate(50);
+            $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
+            if($user->role->permission == 0){
+                $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('isActive',1)->whereRelation('unitUsaha','unit_usaha_id','=',$user->unit_usaha_id)->paginate(50);
                 return response([
                     "data"=>$provinsi
                 ],200);
@@ -37,7 +37,7 @@ class ProductController extends Controller
     
     public function home()
     {
-        $provinsi = Product::with(['productImages'])->orderBy('created_at','desc')->where('isActive',1)->paginate(3);
+        $provinsi = Product::with(['productImages'])->orderBy('updated_at','desc')->where('isActive',1)->paginate(3);
         return response([
             "data"=>$provinsi
         ],200);
@@ -65,6 +65,7 @@ class ProductController extends Controller
     
     public function searchWithFilter(Request $request)
     {   
+        
         $product = Product::with(['productImages','unitUsaha','rating']);
         if($request->id != 'all'){
             $product = $product->where('unit_usaha_id',$request->id);
@@ -74,6 +75,12 @@ class ProductController extends Controller
         }
         if($request->harga != ''){
             $product = $product->orderBy('productPrice',$request->harga);
+        }
+        if($request->user() != null){
+            $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
+            if($user->role->permission == 0){
+                $product = $product->whereRelation('unitUsaha','unit_usaha_id','=',$user->unit_usaha_id);
+            }
         }
         $product = $product->orderBy('created_at',$request->orderBy)->where('isActive',1)->paginate(25);
         return response($product,200);

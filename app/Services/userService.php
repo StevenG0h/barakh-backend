@@ -53,9 +53,22 @@ use Illuminate\Support\Facades\Hash;
         public function destroy($user){
             $user = User::findOrFail($user);
             $admin = Admin::where('user_id',$user->id)->firstOrFail();
+            if($admin->isActive == 0){
+                $admin->isActive=1;
+                $admin->save();
+                return true;
+            }
             $admin->deleted_at = Carbon::now();
             $admin->isActive=0;
             $admin->save();
+            return true;
+        }
+
+        public function destroyPermanent($user){
+            $user = User::findOrFail($user);
+            $admin = Admin::where('user_id',$user->id)->firstOrFail();
+            $admin->delete();
+            $user->delete();
             return true;
         }
     }

@@ -33,4 +33,9 @@ class UserController extends Controller
         $user = $userService->destroy($user);
         return $user;
     }
+
+    public function destroyPermanent($user, UserService $userService){
+        $user = $userService->destroyPermanent($user);
+        return $user;
+    }
 }
