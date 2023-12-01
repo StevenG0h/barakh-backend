@@ -11,7 +11,7 @@ class GaleriController extends Controller
 {
     //public function index()
     public function index(){
-        $galeri = galeri::paginate(25);
+        $galeri = galeri::orderBy('updated_at','desc')->paginate(25);
         return response([
             "data"=>$galeri
         ],200);

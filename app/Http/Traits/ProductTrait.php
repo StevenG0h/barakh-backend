@@ -9,6 +9,8 @@
                 'productDesc'=>'required',
                 'productImages.*'=>'required|image',
                 'productPrice'=>'required',
+                'productDisc'=>'required',
+                'satuan'=>'required',
                 'productStock'=>'required',
                 'unit_usaha_id'=>'required'
             ]);
@@ -21,8 +23,10 @@
                 'productDesc'=>'sometimes',
                 'productImages.*'=>'sometimes',
                 'productPrice'=>'sometimes',
+                'productDisc'=>'sometimes',
                 'productStock'=>'sometimes',
                 'unit_usaha_id'=>'sometimes',
+                'satuan'=>'sometimes',
                 'deletedImage'=>'sometimes'
             ]);
             return $validator;

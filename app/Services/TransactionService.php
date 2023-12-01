@@ -55,23 +55,27 @@ use App\Models\Transaction;
 
         public function updateTransaction($id,Array $data): Transaction{
             $validation =  $this->UpdateTransactionValidator($data)->validate();
-            $transaction = Transaction::findOrFail($id);
-            $transaction->update($validation);
-            return $transaction;
+            $spendingTransaction = Transaction::findOrFail($id);
+            $spendingTransaction->update($validation);
+            $transaction = Transaction::findOrFail($spendingTransaction->transaction_id);
+            $transaction->touch();
+            return $spendingTransaction;
         }
         
         public function updateSpendingTransaction($id,Array $data): SpendingTransaction{
             $validation =  $this->UpdateSpendingTransactionValidator($data)->validate();
-            $transaction = SpendingTransaction::findOrFail($id);
-            $transaction->update($validation);
-            return $transaction;
+            $spendingTransaction = SpendingTransaction::findOrFail($id);
+            $spendingTransaction->update($validation);
+            $transaction = Transaction::findOrFail($spendingTransaction->transaction_id);
+            $transaction->touch();
+            return $spendingTransaction;
         }
 
         public function deleteSpendingTransaction($id): Transaction{
-            $transaction = Transaction::findOrFail($id);
-            $transaction->spending()->delete();
-            $transaction->delete();
-            return $transaction;
+            $spendingTransaction = Transaction::findOrFail($id);
+            $spendingTransaction->spending()->delete();
+            $spendingTransaction->delete();
+            return $spendingTransaction;
         }
         
     }

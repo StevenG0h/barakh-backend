@@ -40,6 +40,7 @@
                 'product.*.productData.id'=>'required',
                 'product.*.productData.unit_usaha_id'=>'required',
                 'product.*.productData.productPrice'=>'required',
+                'product.*.productData.productDisc'=>'required',
                 'product.*.item'=>'required'
             ]);
             return $validator;
@@ -57,7 +58,7 @@
                 $transaction['unit_usaha_id'] = $data['product'][$i]['productData']['unit_usaha_id'];
                 $transaction['product_id'] = $data['product'][$i]['productData']['id'];
                 $transaction['productCount'] = $data['product'][$i]['item'];
-                $transaction['productPrice'] = $data['product'][$i]['productData']['productPrice'];
+                $transaction['productPrice'] = $data['product'][$i]['productData']['productPrice'] - ($data['product'][$i]['productData']['productPrice'] * ($data['product'][$i]['productData']['productDisc'] / 100 ));
                 $transaction['transactionAddress'] = $data['transactionAddress'];
                 $transaction['transactionAmount']= $data['product'][$i]['productData']['productPrice'];
                 array_push($salesTransaction,$transaction);

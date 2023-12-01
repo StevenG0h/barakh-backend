@@ -38,8 +38,8 @@ class TransactionController extends Controller
     public function showPencatatanDetail(Request $request)
     {
         $year = Carbon::now()->format('Y');
-        if($request['year'] != ''){
-            $year = $request['year'];
+        if($request->query('year') != ''){
+            $year = $request->query('year');
         }
         if($request->user() != null){
             $user = Admin::where('user_id',$request->user()->id)->first();
@@ -86,11 +86,11 @@ class TransactionController extends Controller
         if($request->user() != null){
             $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
             if($user->role->permission == 0){
-                $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->whereRelation('sales.product','unit_usaha_id','=',$user->unit_usaha_id)->where('transactionType','PENJUALAN')->paginate(50);
+                $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->whereRelation('sales.product','unit_usaha_id','=',$user->unit_usaha_id)->where('transactionType','PENJUALAN')->paginate(10);
                 return response($transaction,200);
             }
         }
-        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->where('transactionType','PENJUALAN')->paginate(50);
+        $transaction = Transaction::with(['sales.product','sales.client','sales.kelurahan'])->where('transactionType','PENJUALAN')->has('sales')->orderBy('updated_at','desc')->paginate(10);
         return response($transaction,200);
     }
 
@@ -134,10 +134,8 @@ class TransactionController extends Controller
             \DB::raw('SUM(productPrice * productCount) as total'), 
           ) ->whereYear('created_at',$year)->first();
         $stat['pengeluaran'] =  SpendingTransaction::select( 
-            \DB::raw('SUM(spendingValue) as total'), 
-            
-          )
-          ->whereYear('create_time', $year)->first();
+            \DB::raw('SUM(spendingValue) as total'),  
+          )->whereYear('create_time', $year)->first();
         return response($stat,200);
     }
     
@@ -175,13 +173,13 @@ class TransactionController extends Controller
             \DB::raw('SUM(productPrice * productCount) as penjualan'), 
             \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
             \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
-            ) ->whereBetween('created_at',[$from,$to])->get();
+            )->whereBetween('created_at',[$from,$to])->whereRelation('transaction','transactionStatus','!=','BATAL')
+            ->whereRelation('transaction','transactionStatus','!=','BELUMTERVERIFIKASI')->groupBy('month','year')->get();
         $stat['pengeluaran'] =  SpendingTransaction::select( 
             \DB::raw('SUM(spendingValue) as pengeluaran'), 
             \DB::raw("EXTRACT(YEAR FROM `create_time`) as year"),
             \DB::raw("EXTRACT(MONTH FROM `create_time`) as month")
-            )
-            ->whereBetween('create_time',[$from,$to])->get();
+            )->whereBetween('create_time',[$from,$to])->groupBy('month','year')->get();
         
         
         return response($stat,200);

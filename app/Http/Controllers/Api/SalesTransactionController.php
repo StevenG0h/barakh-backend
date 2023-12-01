@@ -47,7 +47,7 @@ class SalesTransactionController extends Controller
     public function edit(string $id, Request $request, SalesTransactionService $service)
     {
         $transaction = $service->updateTransaction($id, $request->all());
-        return response($transaction,200);
+        return $transaction;
     }
 
     /**

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function index(){
-        $user = User::with(['admins.role','admins.unitUsaha'])->whereRelation('admins','isActive',1)->paginate(25);
+        $user = User::with(['admins.role','admins.unitUsaha'])->whereRelation('admins','isActive',1)->orderBy('updated_at','desc')->paginate(25);
         return response($user,200);
     }
     

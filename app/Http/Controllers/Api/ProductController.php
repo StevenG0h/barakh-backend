@@ -15,13 +15,17 @@ class ProductController extends Controller
         if($request->user() != null){
             $user = Admin::where('user_id',$request->user()->id)->with(['role'])->first();
             if($user->role->permission == 0){
-                $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('isActive',1)->whereRelation('unitUsaha','unit_usaha_id','=',$user->unit_usaha_id)->paginate(50);
+                $provinsi = Product::with(['productImages','unitUsaha'=>function($query){
+                    return $query->where('isActive',1);
+                },'rating'])->where('isActive',1)->whereRelation('unitUsaha','unit_usaha_id','=',$user->unit_usaha_id)->orderBy('updated_at','desc')->paginate(50);
                 return response([
                     "data"=>$provinsi
                 ],200);
             }
         }
-        $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('isActive',1)->paginate(25);
+        $provinsi = Product::with(['productImages','unitUsaha'=>function($query){
+            return $query->where('isActive',1);
+        },'rating'])->whereRelation('unitUsaha','isActive','=','1')->where('isActive',1)->orderBy('updated_at','desc')->paginate(25);
         return response([
             "data"=>$provinsi
         ],200);
@@ -29,7 +33,9 @@ class ProductController extends Controller
 
     public function katalog()
     {
-        $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('isActive',1)->paginate(12);
+        $provinsi = Product::with(['productImages','unitUsaha'=>function($query){
+            return $query->where('isActive',1);
+        },'rating'])->whereRelation('unitUsaha','isActive','=','1')->where('isActive',1)->orderBy('updated_at','desc')->paginate(12);
         return response([
             "data"=>$provinsi
         ],200);
@@ -37,7 +43,7 @@ class ProductController extends Controller
     
     public function home()
     {
-        $provinsi = Product::with(['productImages'])->orderBy('updated_at','desc')->where('isActive',1)->paginate(3);
+        $provinsi = Product::with(['productImages'])->orderBy('updated_at','desc')->whereRelation('unitUsaha','isActive','=','1')->where('isActive',1)->paginate(3);
         return response([
             "data"=>$provinsi
         ],200);
@@ -62,11 +68,19 @@ class ProductController extends Controller
         $provinsi = Product::where('id',$id)->with(['unitUsaha','productImages','rating'])->first();
         return response($provinsi,200);
     }
+
+    public function getInCartProduct(Request $request)
+    {
+        $provinsi = Product::findMany($request->productIds);
+        return response($provinsi,200);
+    }
     
     public function searchWithFilter(Request $request)
     {   
         
-        $product = Product::with(['productImages','unitUsaha','rating']);
+        $product = Product::with(['productImages','unitUsaha'=>function($query){
+            return $query->where('isActive',1);
+        },'rating']);
         if($request->id != 'all'){
             $product = $product->where('unit_usaha_id',$request->id);
         }
@@ -82,13 +96,15 @@ class ProductController extends Controller
                 $product = $product->whereRelation('unitUsaha','unit_usaha_id','=',$user->unit_usaha_id);
             }
         }
-        $product = $product->orderBy('created_at',$request->orderBy)->where('isActive',1)->paginate(25);
+        $product = $product->whereRelation('unitUsaha','isActive','=','1')->orderBy('updated_at','desc')->where('isActive',1)->paginate(25);
         return response($product,200);
     }
     
     public function showWithFilter(string $id)
     {
-        $provinsi = Product::with(['productImages','unitUsaha','rating'])->where('unit_usaha_id',$id)->where('isActive',1)->paginate(25);
+        $provinsi = Product::with(['productImages','unitUsaha'=>function($query){
+            return $query->where('isActive',1);
+        },'rating'])->where('unit_usaha_id',$id)->where('isActive',1)->orderBy('updated_at','desc')->paginate(25);
         return response($provinsi,200);
     }
 

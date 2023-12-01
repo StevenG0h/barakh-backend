@@ -14,6 +14,7 @@ use App\Exports\DashboardExports;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -190,15 +191,18 @@ class DashboardController extends Controller
         $data = $request->all();
         $from = date($data['from']);
         $to = date($data['to']);
+        if($to == ""){
+          $to = date(Carbon::now());
+        }
 
         $stat =  SpendingTransaction::select( 
-          \DB::raw('SUM(spendingValue) as total'), 
-          \DB::raw("EXTRACT(YEAR FROM `created_at`) as year"),
-          \DB::raw("EXTRACT(MONTH FROM `created_at`) as month")
-        );
-        $stat = $this->filterUnitDirect($stat, $data);
-        $stat = $this->filterDate($stat, $from, $to);
-        return $stat->groupBy('month', 'year')->get();
+          \DB::raw('SUM(spendingValue) as pengeluaran'), 
+          \DB::raw("EXTRACT(YEAR FROM `create_time`) as year"),
+          \DB::raw("EXTRACT(MONTH FROM `create_time`) as month")
+          )->whereBetween('create_time',[$from,$to]);
+        // $stat = $this->filterUnitDirect($stat, $data);
+        // $stat = $this->filterDate($stat, $from, $to);
+        return $stat->groupBy('month','year')->get();
     }
     
     public function visitor(Request $request){

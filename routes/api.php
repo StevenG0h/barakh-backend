@@ -150,12 +150,12 @@ Route::middleware(['auth:sanctum'])->group(function (){
             Route::put('/{id}',[TransactionController::class, 'update']);
             Route::post('/',[TransactionController::class, 'store']);
             Route::get('/',[TransactionController::class, 'index']);
-            Route::post('/pencatatan-detail',[TransactionController::class, 'showPencatatanDetail']);
+            Route::get('/pencatatan-detail',[TransactionController::class, 'showPencatatanDetail']);
             Route::delete('/{id}',[TransactionController::class, 'destroy']);
             Route::get('/show/{id}',[TransactionController::class, 'show']);
             Route::get('/penjualan',[TransactionController::class, 'showPenjualan']);
             Route::get('/penjualan/{filter}',[TransactionController::class, 'showPenjualanWithFilter']);
-            Route::post('/pencatatan',[TransactionController::class, 'showStat']);
+            Route::get('/pencatatan',[TransactionController::class, 'showStat']);
             Route::post('/keuangan',[TransactionController::class, 'showKeuangan']);
             Route::get('/year',[TransactionController::class, 'getYear']);
         });
@@ -220,6 +220,7 @@ Route::prefix('produk')->group(function(){
     Route::post('/get-cart',[ProductController::class, 'getCart']);
     Route::get('/',[ProductController::class, 'index']);
     Route::get('/katalog',[ProductController::class, 'katalog']);
+    Route::post('/cart',[ProductController::class, 'getInCartProduct']);
     Route::get('/home',[ProductController::class, 'home']);
     Route::delete('/{id}',[ProductController::class, 'destroy']);
     Route::get('/{id}',[ProductController::class, 'show']);
